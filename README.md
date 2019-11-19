@@ -7,12 +7,19 @@ at university Basel.
 ## Getting Started
 
 MySQL Server IP: 
+
 134.209.234.163
+
 http://134.209.234.163/phpmyadmin/index.php
+
 Username:
-Admin
+
+admin
+
 Password:
+
 d7730e905d7c2a007371051d2060cc8d9de4ba9230e7bfc8
+
 ## Built With
 
 * [MySQL](https://www.mysql.com/) - SQL dialect
