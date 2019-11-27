@@ -6,6 +6,10 @@ at university Basel.
 
 ## Getting Started
 
+'''
+python -m pip install mysql-connector
+'''
+
 MySQL Server IP: 
 
 134.209.234.163
