@@ -37,16 +37,21 @@ class Database:
         cursor = self.db.cursor()
         cursor.execute(query)
         cursor.close()
-        self.db.close()
+
+    def query_all(self, queries):
+        cursor = self.db.cursor()
+        for query in queries:
+            cursor.execute(query)
+        cursor.close()
 
     def close_connection(self):
+        self.db.close()
         self.tunnel.stop()
 
-
-def main():
+'''def main():
     db = Database()
     db.query("CREATE TABLE test (nummer INTEGER, PRIMARY KEY (nummer))")
     db.close_connection()
 
 
-main()
+main()'''
