@@ -1,6 +1,9 @@
 import re
 
+
 class Parser:
+    def __init__(self):
+        pass
 
     @staticmethod
     def transform_sql(file_path) -> [str]:
@@ -20,4 +23,7 @@ class Parser:
 
     @staticmethod
     def transform_csv():
+        pass
+
+    def test(self):
         pass

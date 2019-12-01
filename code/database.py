@@ -44,9 +44,19 @@ class Database:
             cursor.execute(query)
         cursor.close()
 
+    def drop_table(self, table):
+        self.query("DROP TABLE IF EXISTS {}".format(table))
+
+    def drop_all_tables(self):
+        tables = ["Address", "Drug", "Crime", "Review", "Report", "Business", "Add_Business_Info", "is_located",
+                  "rates_a", "occured_at","specifies", "reports", "has"]
+        for table in tables:
+            self.drop_table(table)
+
     def close_connection(self):
         self.db.close()
         self.tunnel.stop()
+
 
 '''def main():
     db = Database()
