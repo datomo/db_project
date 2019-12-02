@@ -25,6 +25,7 @@ class Crime:
                 if i != 1 and  i % chunk == 0:
                     print(query)
                     db.query(query)
+                    db.commit()
                     executed = True
 
                 if i % chunk == 0 or i == 1:
@@ -43,4 +44,5 @@ class Crime:
                 i += 1
             if not executed:
                 db.query(query)
+                db.commit()
                 print(query)

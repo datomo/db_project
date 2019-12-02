@@ -17,7 +17,6 @@ def main():
     if add_crime:
         Crime.add_data(db)
 
-
     db.close_connection()
 
 
