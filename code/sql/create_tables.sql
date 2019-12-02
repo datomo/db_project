@@ -1,9 +1,9 @@
 CREATE TABLE Address(
-    address_id INTEGER, 
+    address_id VARCHAR(12),
     zip INTEGER,
     city VARCHAR(255), 
     street VARCHAR(255),
-    street_number INTEGER, 
+    street_number VARCHAR(255),
     county VARCHAR(255),
     state VARCHAR(255), 
     address_name VARCHAR(255),
@@ -29,7 +29,7 @@ CREATE TABLE Drug(
 
 CREATE TABLE Crime(
     crime_id VARCHAR(9),
-    inc_number BIGINT,
+    inc_number BIGINT(8),
     premise_type VARCHAR(255), 
     occurred_on VARCHAR(255),
     occurred_to VARCHAR(255), 
@@ -95,9 +95,9 @@ CREATE TABLE rates_a(
 );
 
 CREATE TABLE occured_at(
-    address_id INTEGER REFERENCES Address(address_id),
-    business_id INTEGER REFERENCES Business(business_id),
-    PRIMARY KEY (address_id, business_id)
+    address_id VARCHAR(255) REFERENCES Address(address_id),
+    crime_id VARCHAR(255) REFERENCES Crime(crime_id),
+    PRIMARY KEY (address_id, crime_id)
 );
 
 CREATE TABLE  specifies(

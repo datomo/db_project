@@ -30,13 +30,47 @@ class Database:
             host="localhost",
             user=user,
             passwd=password,
-            database=database
+            database=database,
+            connect_timeout=28800
         )
+
+    def commit(self):
+        self.db.commit()
 
     def query(self, query):
         cursor = self.db.cursor()
         cursor.execute(query)
         cursor.close()
+        self.db.commit()
+
+    def querymany(self, query, data_list):
+        cursor = self.db.cursor()
+        cursor.executemany(query, data_list)
+        cursor.close()
+        self.db.commit()
+
+    def exists(self, table, statments):
+        query = "SELECT (1) FROM {} WHERE {}".format(table, " AND ".join(statments))
+        res = self.select_one(query)
+        if res:
+            return True
+        else:
+            return False
+
+    def select(self, query):
+        cursor = self.db.cursor()
+        cursor.execute(query)
+        fetch = cursor.fetchall()
+        cursor.close()
+        return fetch
+
+    def select_one(self, query):
+        cursor = self.db.cursor(buffered=True)
+        cursor.execute(query)
+        fetch = cursor.fetchone()
+        cursor.close()
+
+        return fetch
 
     def query_all(self, queries):
         cursor = self.db.cursor()
