@@ -44,8 +44,11 @@ class Database:
         self.db.commit()
 
     def querymany(self, query, data_list):
-        self.cursor.executemany(query, data_list)
-        self.db.commit()
+        try:
+            self.cursor.executemany(query, data_list)
+            self.db.commit()
+        except mysql.connector.Error as err:
+            print("Something went wrong: {}".format(err))
 
     def exists(self, table, statments):
         query = "SELECT (1) FROM {} WHERE {}".format(table, " AND ".join(statments))
