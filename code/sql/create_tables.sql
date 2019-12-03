@@ -30,7 +30,7 @@ CREATE TABLE Drug(
 
 CREATE TABLE Crime(
     crime_id VARCHAR(9),
-    inc_number BIGINT(12),
+    inc_number DECIMAL(20,0),
     premise_type VARCHAR(255), 
     occurred_on VARCHAR(255),
     occurred_to VARCHAR(255), 
