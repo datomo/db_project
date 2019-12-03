@@ -15,7 +15,7 @@ class Crime:
         print("number of columns: {}".format(lines))
 
         with open(file_path, 'r') as file:
-            chunk = 1024
+            chunk = 10000
             found_address = 0
 
             o_query = "INSERT INTO occured_at VALUES(%(a_id)s, %(c_id)s)"

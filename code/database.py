@@ -16,6 +16,8 @@ database = 'db_project'
 class Database:
     def __init__(self):
         self.open_connection()
+        self.cursor = self.db.cursor()
+        self.buffered_cursor = self.db.cursor(buffered=True)
 
     def open_connection(self):
         self.tunnel = SSHTunnelForwarder(
@@ -38,15 +40,11 @@ class Database:
         self.db.commit()
 
     def query(self, query):
-        cursor = self.db.cursor()
-        cursor.execute(query)
-        cursor.close()
+        self.cursor.execute(query)
         self.db.commit()
 
     def querymany(self, query, data_list):
-        cursor = self.db.cursor()
-        cursor.executemany(query, data_list)
-        cursor.close()
+        self.cursor.executemany(query, data_list)
         self.db.commit()
 
     def exists(self, table, statments):
@@ -58,25 +56,19 @@ class Database:
             return False
 
     def select(self, query):
-        cursor = self.db.cursor()
-        cursor.execute(query)
-        fetch = cursor.fetchall()
-        cursor.close()
+        self.cursor.execute(query)
+        fetch = self.cursor.fetchall()
         return fetch
 
     def select_one(self, query):
-        cursor = self.db.cursor(buffered=True)
-        cursor.execute(query)
-        fetch = cursor.fetchone()
-        cursor.close()
+        self.buffered_cursor.execute(query)
+        fetch = self.buffered_cursor.fetchone()
 
         return fetch
 
     def query_all(self, queries):
-        cursor = self.db.cursor()
         for query in queries:
-            cursor.execute(query)
-        cursor.close()
+            self.cursor.execute(query)
 
     def drop_table(self, table):
         self.query("DROP TABLE IF EXISTS {}".format(table))
@@ -88,6 +80,8 @@ class Database:
             self.drop_table(table)
 
     def close_connection(self):
+        self.cursor.close()
+        self.buffered_cursor.close()
         self.db.close()
         self.tunnel.stop()
 

@@ -10,7 +10,8 @@ CREATE TABLE Address(
     longitude INTEGER, 
     latitude INTEGER,
     addl_co_info VARCHAR(255),
-    PRIMARY KEY (address_id)
+    PRIMARY KEY (address_id),
+    INDEX (zip, street, street_number)
 );
 
 CREATE TABLE Drug(
@@ -29,7 +30,7 @@ CREATE TABLE Drug(
 
 CREATE TABLE Crime(
     crime_id VARCHAR(9),
-    inc_number BIGINT(8),
+    inc_number BIGINT(12),
     premise_type VARCHAR(255), 
     occurred_on VARCHAR(255),
     occurred_to VARCHAR(255), 
