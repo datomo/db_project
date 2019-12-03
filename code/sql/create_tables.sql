@@ -1,5 +1,5 @@
 CREATE TABLE Address(
-    address_id VARCHAR(12),
+    address_id BIGINT(15),
     zip INTEGER,
     city VARCHAR(255), 
     street VARCHAR(255),
@@ -29,7 +29,7 @@ CREATE TABLE Drug(
 );
 
 CREATE TABLE Crime(
-    crime_id VARCHAR(9),
+    crime_id BIGINT(15),
     inc_number DECIMAL(20,0),
     premise_type VARCHAR(255), 
     occurred_on VARCHAR(255),

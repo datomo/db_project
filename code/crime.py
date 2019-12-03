@@ -36,8 +36,8 @@ class Crime:
                 words = data[4].split(" ")
                 words = [' '.join(words[:2]), ' '.join(words[-2:])]
 
-                a_id = "a" + str(i)
-                c_id = "c" + str(i)
+                a_id = str(i) + "0"
+                c_id = str(i) + "000"
                 executed = False
 
                 # exists = db.exists("Address", {"'zip' = {}".format(data[5]), "'street' = '{}'".format(words[1]), "'street_number' = '{}'".format(words[0])})

@@ -3,8 +3,8 @@ from database import Database
 import db_parser
 from pill import Pill
 
-initalize_tables = False
-add_crime = False
+initalize_tables = True
+add_crime = True
 add_pill = True
 
 def main():
