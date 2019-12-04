@@ -3,9 +3,9 @@ from database import Database
 import db_parser
 from pill import Pill
 
-drop_tables = True
-initalize_tables = True
-add_crime = True
+drop_tables = False
+initalize_tables = False
+add_crime = False
 add_pill = True
 
 def main():
