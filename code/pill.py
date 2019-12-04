@@ -24,6 +24,18 @@ class Pill:
         lines = sum(1 for i in open(file_path, 'rb'))
         print("number of columns: {}".format(lines))
 
+        a_data = []
+
+        b_data = []
+        b_id = str(i) + "00"
+
+        r_data = []
+        d_data = []
+        il_data = []
+        re_data = []
+        sp_data = []
+
+
         with open(file_path, 'r') as file:
             chunk = 100000
             found_address = 0
@@ -42,23 +54,71 @@ class Pill:
                 zip = elements[8]
                 print("{}#{}#{}#{}".format(zip, street_name, street_num, additional))
 
+                # rep_add
+                a_data.append({
+                    'id': id_start,
+                    'zip': elements[8],
+                    'city': elements[6],
+                    'street': street_name,
+                    'street_number': street_num,
+                    'county': elements[9],
+                    'state': elements[7],
+                    'address_name': additional,
+                    'longitude': None,
+                    'latitude': None,
+                    'addl_co_info': elements[3]
+                })
+                # if data was added start id + 1
+
                 (street_name, street_num, additional) = Pill.process_address(buy_add1, buy_add2)
                 zip = elements[18]
                 print("{}#{}#{}#{}".format(zip, street_name, street_num, additional))
 
-                ''''{
-                id
-                zip
-                city
-                street
-                street_number
-                county
-                state
-                address_name
-                longitude
-                latitude
-                addl_co_info
-                }'''
+                # buy_add
+                a_data.append({
+                    'id': id_start,
+                    'zip': elements[18],
+                    'city': elements[16],
+                    'street': street_name,
+                    'street_number': street_num,
+                    'county': elements[19],
+                    'state': elements[17],
+                    'address_name': additional,
+                    'longitude': None,
+                    'latitude': None,
+                    'addl_co_info': elements[3]
+                })
+                # if data was added start id + 1
+        # reporter_bus_act = busines name and reporter name meist null darum nehmer wir hier dies
+        # rep_add
+        b_data.append({
+            'id': b_id,
+            'business_name': elements[1],
+            'revied_business_id': None,
+            'dea_no': elements[0]
+        })
+        # buy_add
+        b_data.append({
+            'id': b_id,
+            'business_name': elements[11],
+            'revied_business_id': None,
+            'dea_no': elements[10]
+        })
+
+        r_data.append({
+            'transaction_id': elements[34],
+            'correction_no': elements[29],
+            'action_indicator': elements[27],
+            'transaction_code': elements[20],
+            'order_from_no': elements[28],
+            'reporter_family': elements[41],
+            'transaction_date': elements[31],
+            'revised_company_name': elements[30],
+            'measure': elements[37],
+            'unit': elements[26],
+            'quantity': elements[25],
+            'dosage_unit': elements[33]
+        })
 
     @staticmethod
     def process_address(add1, add2) -> (str, str, str):

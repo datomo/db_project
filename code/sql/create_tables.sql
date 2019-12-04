@@ -69,6 +69,8 @@ CREATE TABLE Report(
 CREATE TABLE Business(
     business_id INTEGER, 
     business_name VARCHAR(255),
+    revied_business_id VARCHAR(255),
+    DEA_No VARCHAR(255),
     PRIMARY KEY (business_id)
 );
 
