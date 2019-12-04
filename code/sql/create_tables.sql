@@ -67,7 +67,7 @@ CREATE TABLE Report(
 );
 
 CREATE TABLE Business(
-    business_id INTEGER, 
+    business_id BIGINT(15),
     business_name VARCHAR(255),
     revied_business_id VARCHAR(255),
     DEA_No VARCHAR(255),
@@ -86,20 +86,20 @@ CREATE TABLE Add_Business_Info(
 );
 
 CREATE TABLE is_located(
-  address_id INTEGER REFERENCES Address(address_id),
-  business_name VARCHAR(255) REFERENCES Business(business_name),
-  PRIMARY KEY (address_id)
+  address_id BIGINT(15) REFERENCES Address(address_id),
+  business_id BIGINT(15) REFERENCES Business(business_id),
+  PRIMARY KEY (address_id, business_id)
 );
 
 CREATE TABLE rates_a(
   review_id INTEGER REFERENCES Review(review_id),
-  business_id INTEGER REFERENCES Business(business_id),
+  business_id BIGINT(15) REFERENCES Business(business_id),
   PRIMARY KEY (review_id, business_id)
 );
 
 CREATE TABLE occured_at(
-    address_id VARCHAR(255) REFERENCES Address(address_id),
-    crime_id VARCHAR(255) REFERENCES Crime(crime_id),
+    address_id BIGINT(15) REFERENCES Address(address_id),
+    crime_id BIGINT(15) REFERENCES Crime(crime_id),
     PRIMARY KEY (address_id, crime_id)
 );
 
@@ -110,13 +110,14 @@ CREATE TABLE  specifies(
 );
 
 CREATE TABLE reports(
-    business_id INTEGER REFERENCES Business(business_id),
+    business_id BIGINT(15) REFERENCES Business(business_id),
     transaction_id INTEGER REFERENCES  Report(transaction_id),
-    bus_act INTEGER, role VARCHAR(255),
+    bus_act VARCHAR(255),
+    role VARCHAR(255),
     PRIMARY KEY (business_id, transaction_id)
 );
 
 CREATE TABLE has(
-    business_id INTEGER REFERENCES Business (business_id),
+    business_id BIGINT(15) REFERENCES Business (business_id),
     abi_id INTEGER REFERENCES  Add_Business_Info(abi_id)
 );
