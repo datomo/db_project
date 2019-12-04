@@ -3,6 +3,7 @@ from database import Database
 import db_parser
 from pill import Pill
 
+drop_tables = True
 initalize_tables = True
 add_crime = True
 add_pill = True
@@ -10,7 +11,8 @@ add_pill = True
 def main():
     db = Database()
 
-    db.drop_all_tables()
+    if drop_tables:
+        db.drop_all_tables()
 
     if initalize_tables:
         queries = db_parser.transform_sql("./sql/create_tables.sql")

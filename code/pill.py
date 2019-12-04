@@ -10,11 +10,12 @@ class Pill:
     def add_data(db: Database):
         file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
         address_path = "../data/temp/c_address.txt"
-        i = 1
-        addresses = {}
 
+        addresses = {}
+        i = 1
         id_start = int(str(db.select_one("SELECT MAX(address_id) FROM Address")[0])[:-1])
         print(id_start)
+        a_i = 1 + id_start
 
         with open(address_path) as file:
             for line in file:
@@ -25,6 +26,7 @@ class Pill:
         print("number of columns: {}".format(lines))
 
         a_data = []
+        a_id = str(a_i) + "00"
 
         b_data = []
         b_id = str(i) + "00"
@@ -35,12 +37,11 @@ class Pill:
         re_data = []
         sp_data = []
 
-
         with open(file_path, 'r') as file:
             chunk = 100000
             found_address = 0
 
-            for line in islice(file, 1, 20):
+            for line in islice(file, 1, None):
                 elements = line.replace("\n", "").split('\t')
                 # print(str(elements))
 
@@ -52,43 +53,70 @@ class Pill:
 
                 (street_name, street_num, additional) = Pill.process_address(rep_add1, rep_add2)
                 zip = elements[8]
-                print("{}#{}#{}#{}".format(zip, street_name, street_num, additional))
+                # print("{}#{}#{}#{}".format(zip, street_name, street_num, additional))
 
-                # rep_add
-                a_data.append({
-                    'id': id_start,
-                    'zip': elements[8],
-                    'city': elements[6],
-                    'street': street_name,
-                    'street_number': street_num,
-                    'county': elements[9],
-                    'state': elements[7],
-                    'address_name': additional,
-                    'longitude': None,
-                    'latitude': None,
-                    'addl_co_info': elements[3]
-                })
+                if str(elements[8]) + street_name + street_num in addresses:
+                    print("in list: {}".format(a_i))
+                    if not additional and not elements[3] or (additional == "null" and additional == "null"):
+                        additional = None
+                    elif additional and elements:
+                        additional = "\n".join([additional, elements[3]])
+                    else:
+                        additional = additional if additional != "null" and additional else elements[3]
+
+                    # rep_add
+                    a_data.append({
+                        'id': id_start,
+                        'zip': elements[8],
+                        'city': elements[6],
+                        'street': street_name,
+                        'street_number': street_num,
+                        'county': elements[9],
+                        'state': elements[7],
+                        'address_name': additional,
+                        'longitude': None,
+                        'latitude': None,
+                        'addl_co_info': additional
+                    })
+                    addresses[str(elements[8]) + street_name + street_num] = a_id
+                    a_i += 1
+                    a_id = str(a_id) + "00"
+
                 # if data was added start id + 1
 
                 (street_name, street_num, additional) = Pill.process_address(buy_add1, buy_add2)
                 zip = elements[18]
-                print("{}#{}#{}#{}".format(zip, street_name, street_num, additional))
+                # print("{}#{}#{}#{}".format(zip, street_name, street_num, additional))
 
-                # buy_add
-                a_data.append({
-                    'id': id_start,
-                    'zip': elements[18],
-                    'city': elements[16],
-                    'street': street_name,
-                    'street_number': street_num,
-                    'county': elements[19],
-                    'state': elements[17],
-                    'address_name': additional,
-                    'longitude': None,
-                    'latitude': None,
-                    'addl_co_info': elements[3]
-                })
-                # if data was added start id + 1
+                if str(elements[18]) + street_name + street_num in addresses:
+
+                    print("in list: {}".format(a_id))
+
+                    if not additional and not elements[3] or (additional == "null" and additional == "null"):
+                        additional = None
+                    elif additional and elements:
+                        additional = "\n".join([additional, elements[3]])
+                    else:
+                        additional = additional if additional != "null" and additional else elements[3]
+
+                    # buy_add
+                    a_data.append({
+                        'id': id_start,
+                        'zip': elements[18],
+                        'city': elements[16],
+                        'street': street_name,
+                        'street_number': street_num,
+                        'county': elements[19],
+                        'state': elements[17],
+                        'address_name': additional,
+                        'longitude': None,
+                        'latitude': None,
+                        'addl_co_info': additional
+                    })
+                    addresses[str(elements[18]) + street_name + street_num] = a_id
+
+                    # if data was added start id + 1
+                    a_id += 1
         # reporter_bus_act = busines name and reporter name meist null darum nehmer wir hier dies
         # rep_add
         b_data.append({
@@ -119,6 +147,8 @@ class Pill:
             'quantity': elements[25],
             'dosage_unit': elements[33]
         })
+
+        i += 2
 
     @staticmethod
     def process_address(add1, add2) -> (str, str, str):
