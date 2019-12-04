@@ -157,18 +157,18 @@ class Pill:
                     })
 
                     r_data.append({
-                        'transaction_id': elements[34],
-                        'correction_no': elements[29],
-                        'action_indicator': elements[27],
+                        'transaction_id': elements[33],
+                        'correction_no': elements[28],
+                        'action_indicator': elements[26],
                         'transaction_code': elements[20],
-                        'order_from_no': elements[28],
-                        'reporter_family': elements[41],
-                        'transaction_date': elements[31],
-                        'revised_company_name': elements[30],
-                        'measure': elements[37],
-                        'unit': elements[26],
-                        'quantity': elements[25],
-                        'dosage_unit': elements[33]
+                        'order_from_no': elements[27],
+                        'reporter_family': elements[40],
+                        'transaction_date': elements[30],
+                        'revised_company_name': elements[39],
+                        'measure': elements[36],
+                        'unit': elements[25],
+                        'quantity': elements[24],
+                        'dosage_unit': elements[32]
                     })
 
                     i += 1
@@ -180,6 +180,23 @@ class Pill:
         with open("../data/temp/c_address_after_pill.txt", "w+") as file:
             for k, v in addresses.items():
                 file.write('{}#{}\n'.format(k, v))
+
+
+
+        d_data.append({
+            "ndc_no": elements[22],
+            "combined_labeler_name": elements[38],
+            "dos_str": elements[41],
+            "calc_base_wt_in_gm": elements[31],
+            "product_name": elements[34],
+            "strength": elements[29],
+            "drug_code": elements[21],
+            "drug_name": elements[23],
+            "ingredient_name": elements[35],
+            "mme_conversion_factor": elements[37]
+        })
+
+
 
     @staticmethod
     def process_address(add1, add2) -> (str, str, str):
