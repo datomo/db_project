@@ -290,42 +290,125 @@ class Pill:
                   " WHERE NOT EXISTS (" \
                   "SELECT zip FROM Address WHERE zip = %(zip)s AND street = %(street)s AND street_number = %(street_number)s" \
                   ") LIMIT 1"
+        r_query = "INSERT INTO Report (transaction_id, correction_no, action_indicator,transaction_code,order_from_no,reporter_family,transaction_date,revised_company_name,measure,unit,quantity,dosage_unit) VALUES (" \
+                  "%(trans_id)s, " \
+                  "%(correction_no)s," \
+                  "%(action_indicator)s," \
+                  "%(trans_code)s," \
+                  "%(order_from_no)s," \
+                  "%(reporter_family)s," \
+                  "%(trans_code)s," \
+                  "%(revised_company_name)s," \
+                  "%(measure)s," \
+                  "%(unit)s," \
+                  "%(quantity)s," \
+                  "%(dosage_unit)s)"
+        b_query = "INSERT INTO Business (business_name, reviewed_business_id, DEA_NO)" \
+                  "SELECT * FROM (SELECT " \
+                  "%(business_name)s AS business_name, " \
+                  "%(reviewed_business_id)s AS reviewed_business_id, " \
+                  "%(dea_no)s AS DEA_NO) AS tmp" \
+                  " WHERE NOT EXISTS (" \
+                  "SELECT DEA_NO FROM Business WHERE DEA_NO = %(dea_no)s AND business_name = %(business_name)s" \
+                  ") LIMIT 1"
+        d_query = "INSERT IGNORE INTO Drug VALUES(" \
+                  "%(ndc_no)s," \
+                  "%(combined_labeler_name)s," \
+                  "%(dos_str)s," \
+                  "%(calc_base)s," \
+                  "%(product_name)s," \
+                  "%(strength)s," \
+                  "%(drug_code)s," \
+                  "%(drug_name)s," \
+                  "%(ingredient_name)s," \
+                  "%(mme)s)"
         a_data = []
-        i = 0
+        r_data = []
+        b_data = []
+        d_data = []
 
         for col in cols:
             elements = col.replace("\n", "").split('\t')
-            buy_add1 = elements[14]
-            buy_add2 = elements[15]
+            positions = [4, 5, 3, 8, 6, 9, 7]
+            Pill.process_address_p(a_data, elements, positions)
+            positions = [14, 15, 13, 18, 16, 19, 17]
+            Pill.process_address_p(a_data, elements, positions)
+            Pill.proccess_report_p(elements, r_data)
 
-            (street_name, street_num, additional) = Pill.process_address(buy_add1, buy_add2)
+            dea = elements[0]
+            b_name = elements[2]
+            Pill.process_business_p(b_data, b_name, dea)
 
-            if not additional and not elements[3] or (additional == "null" and additional == "null"):
-                additional = None
-            elif additional and elements:
-                additional = "\n".join([additional, elements[3]])
-            else:
-                additional = additional if additional != "null" and additional else elements[3]
+            dea = elements[10]
+            b_name = elements[12]
+            Pill.process_business_p(b_data, b_name, dea)
 
-            # buy_add
-            a_data.append({
-                'zip': elements[18],
-                'city': elements[16],
-                'street': street_name,
-                'street_number': street_num,
-                'county': elements[19],
-                'state': elements[17],
-                'address_name': additional,
-                'longitude': None,
-                'latitude': None,
-                'addl_co_info': additional
-            })
-            i += 1
+            Pill.process_drug_p(d_data, elements, str(elements[22]))
+
         print("finished")
 
         db.querymany(a_query, a_data)
+        db.querymany(r_query, r_data)
+        db.querymany(b_query, b_data)
+        db.querymany(d_query, d_data)
 
+    @staticmethod
+    def process_drug_p(d_data, elements, ndc_id):
+        d_data.append(Pill.replace_null({
+            "ndc_no": ndc_id,
+            "combined_labeler_name": elements[38],
+            "dos_str": elements[41],
+            "calc_base": elements[31],
+            "product_name": elements[34],
+            "strength": elements[29],
+            "drug_code": elements[21],
+            "drug_name": elements[23],
+            "ingredient_name": elements[35],
+            "mme": elements[37]
+        }))
 
+    @staticmethod
+    def proccess_report_p(elements, r_data):
+        r_data.append(Pill.replace_null({
+            'trans_id': elements[33],
+            'correction_no': elements[28],
+            'action_indicator': elements[26],
+            'trans_code': elements[20],
+            'order_from_no': elements[27],
+            'reporter_family': elements[40],
+            'trans_date': elements[30],
+            'revised_company_name': elements[39],
+            'measure': elements[36],
+            'unit': elements[25],
+            'quantity': elements[24],
+            'dosage_unit': elements[32]
+        }))
+
+    @staticmethod
+    def process_address_p(a_data, elements, positions):
+        add1 = elements[positions[0]]
+        add2 = elements[positions[1]]
+
+        (street_name, street_num, additional) = Pill.process_address(add1, add2)
+        if not additional and not elements[positions[2]] or (additional == "null" and additional == "null"):
+            additional = None
+        elif additional and elements:
+            additional = "\n".join([additional, elements[positions[3]]])
+        else:
+            additional = additional if additional != "null" and additional else elements[positions[2]]
+        # buy_add
+        a_data.append({
+            'zip': elements[positions[3]],
+            'city': elements[positions[4]],
+            'street': street_name,
+            'street_number': street_num,
+            'county': elements[positions[5]],
+            'state': elements[positions[6]],
+            'address_name': additional,
+            'longitude': None,
+            'latitude': None,
+            'addl_co_info': additional
+        })
 
     @staticmethod
     def replace_null(obj):
@@ -351,6 +434,16 @@ class Pill:
                 'b_id': b_id
             })
             is_locaded_list.append(str(a_id) + str(b_id))
+
+    @staticmethod
+    def process_business_p(b_data, b_name, dea):
+
+        b_data.append({
+            'business_name': b_name,
+            'reviewed_business_id': None,
+            'dea_no': dea
+        })
+
 
     @staticmethod
     def process_business(b_data, b_name, businesses, dea, inc):

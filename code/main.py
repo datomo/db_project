@@ -5,7 +5,7 @@ from pill import Pill
 
 drop_tables = True
 initalize_tables = True
-add_crime = False
+add_crime = True
 add_pill = True
 
 def main():

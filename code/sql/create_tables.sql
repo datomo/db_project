@@ -53,7 +53,7 @@ CREATE TABLE Review(
 );
 
 CREATE TABLE Report(
-    id BIGINT(15),
+    id BIGINT(15) AUTO_INCREMENT,
     transaction_id BIGINT(15),
     correction_no INTEGER,
     action_indicator VARCHAR(2),
@@ -70,11 +70,12 @@ CREATE TABLE Report(
 );
 
 CREATE TABLE Business(
-    business_id BIGINT(15),
+    business_id BIGINT(15) AUTO_INCREMENT,
     business_name VARCHAR(255),
-    revied_business_id VARCHAR(255),
+    reviewed_business_id VARCHAR(255),
     DEA_No VARCHAR(255),
-    PRIMARY KEY (business_id)
+    PRIMARY KEY (business_id),
+    INDEX (DEA_No, business_name)
 );
 
 CREATE TABLE Add_Business_Info(
