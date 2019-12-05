@@ -5,7 +5,7 @@ from pill import Pill
 
 drop_tables = True
 initalize_tables = True
-add_crime = True
+add_crime = False
 add_pill = True
 
 def main():
@@ -22,7 +22,7 @@ def main():
         Crime.add_data(db)
 
     if add_pill:
-        Pill.add_data(db)
+        Pill.add_data_parallel(db, 0)
 
     db.close_connection()
 

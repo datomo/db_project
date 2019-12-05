@@ -1,5 +1,5 @@
 CREATE TABLE Address(
-    address_id BIGINT(15),
+    address_id BIGINT(15) AUTO_INCREMENT,
     zip INTEGER,
     city VARCHAR(255), 
     street VARCHAR(255),

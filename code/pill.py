@@ -232,6 +232,102 @@ class Pill:
                     file.write('{}#{}\n'.format(sub_k, sub_v))
 
     @staticmethod
+    def add_data_parallel(db: Database, start: int, end = None):
+        file_path = "../data/arcos_all_washpost.tsv"
+        address_path = "../data/temp/c_address.txt"
+
+        with open(file_path, 'r') as file:
+            chunk = 200000
+
+            # lines = sum(1 for i in open(file_path, 'rb'))
+            lines = 178598027
+            print("number of columns: {}".format(lines))
+
+            chunk_amount = int(float(lines) / chunk)
+            print("{}".format(chunk_amount))
+
+            i = 0
+
+            start_time = time.time()
+
+            for a_chunk in range(chunk_amount):
+
+                start = (a_chunk * chunk) + 1
+                end = start + chunk - 1
+
+                output = []
+
+                for line in file:
+                    if i == 0:
+                        i += 1
+                        continue
+                    output.append(line)
+                    i += 1
+
+                    if i == end:
+                        break
+                Pill.parse_cols(output, db)
+                print("executed {} rows from {}: {}%".format(i, lines, round(i / lines * 100, 2)))
+                break
+                ## hand to processe
+
+            print("{}s".format(time.time()-start_time))
+
+    @staticmethod
+    def parse_cols(cols:[], db:Database):
+        a_query = "INSERT INTO Address (zip, city, street, street_number, county, state, address_name, longitude, latitude, addl_co_info) " \
+                  "SELECT * FROM (SELECT " \
+                  "%(zip)s AS zip, " \
+                  "%(city)s AS city, " \
+                  "%(street)s AS street, " \
+                  "%(street_number)s AS street_number, " \
+                  "%(county)s AS county, " \
+                  "%(state)s AS state, " \
+                  "%(address_name)s AS address_name, " \
+                  "%(longitude)s AS longitude, " \
+                  "%(latitude)s AS latitude, " \
+                  "%(addl_co_info)s AS addl_co_info) AS tmp" \
+                  " WHERE NOT EXISTS (" \
+                  "SELECT zip FROM Address WHERE zip = %(zip)s AND street = %(street)s AND street_number = %(street_number)s" \
+                  ") LIMIT 1"
+        a_data = []
+        i = 0
+
+        for col in cols:
+            elements = col.replace("\n", "").split('\t')
+            buy_add1 = elements[14]
+            buy_add2 = elements[15]
+
+            (street_name, street_num, additional) = Pill.process_address(buy_add1, buy_add2)
+
+            if not additional and not elements[3] or (additional == "null" and additional == "null"):
+                additional = None
+            elif additional and elements:
+                additional = "\n".join([additional, elements[3]])
+            else:
+                additional = additional if additional != "null" and additional else elements[3]
+
+            # buy_add
+            a_data.append({
+                'zip': elements[18],
+                'city': elements[16],
+                'street': street_name,
+                'street_number': street_num,
+                'county': elements[19],
+                'state': elements[17],
+                'address_name': additional,
+                'longitude': None,
+                'latitude': None,
+                'addl_co_info': additional
+            })
+            i += 1
+        print("finished")
+
+        db.querymany(a_query, a_data)
+
+
+
+    @staticmethod
     def replace_null(obj):
         for k, v in obj.items():
             if v == "null":
