@@ -8,7 +8,7 @@ ssh_username = 'root'
 ssh_password = 'db_project2019'
 
 # database variables
-user = 'admin'
+user = 'root'
 password = 'd7730e905d7c2a007371051d2060cc8d9de4ba9230e7bfc8'
 database = 'db_project'
 
@@ -21,18 +21,19 @@ class Database:
         self.buffered_cursor = self.db.cursor(buffered=True)
 
     def open_connection(self):
-        self.tunnel = SSHTunnelForwarder(
+        ''' self.tunnel = SSHTunnelForwarder(
             (host, 22),
             ssh_username=ssh_username,
             ssh_password=ssh_password,
             remote_bind_address=("localhost", 3306),
             local_bind_address=("localhost", 3306)
         )
-        self.tunnel.start()
+        self.tunnel.start()'''
         self.db = mysql.connector.connect(
             host="localhost",
+            port="3306",
             user=user,
-            passwd=password,
+            passwd=ssh_password,
             database=database,
             connect_timeout=28800
         )
@@ -88,7 +89,7 @@ class Database:
         self.cursor.close()
         self.buffered_cursor.close()
         self.db.close()
-        self.tunnel.stop()
+        # self.tunnel.stop()
 
 
 '''def main():
