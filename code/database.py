@@ -17,6 +17,7 @@ class Database:
     def __init__(self):
         self.open_connection()
         self.cursor = self.db.cursor()
+        self.query("SET GLOBAL max_allowed_packet=1073741824")
         self.buffered_cursor = self.db.cursor(buffered=True)
 
     def open_connection(self):

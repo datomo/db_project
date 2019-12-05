@@ -1,7 +1,28 @@
 number of columns: 264877
-time passed: 0.413
+time passed: 0.435
 executed 100000 rows from 264877: 37.75%
 found addresses in chunk: 73902
-time passed: 0.387
+time passed: 0.386
 executed 200000 rows from 264877: 75.51%
 found addresses in chunk: 90356
+finished...
+start id from addresses: 264869
+number of columns: 178598027
+892
+1 - 200000
+i atm: 0
+time passed: 79.588
+executed 200000 rows from 178598027: 0.11%
+exuted: d: 412, r: 199999, spec: 199999, b: 12285, rep: 399998, a: 11720, is: 12285
+200001 - 400000
+i atm: 200000
+time passed: 148.368
+executed 400000 rows from 178598027: 0.22%
+exuted: d: 55, r: 200000, spec: 200000, b: 8232, rep: 400000, a: 7848, is: 8232
+400001 - 600000
+i atm: 400000
+time passed: 185.359
+executed 600000 rows from 178598027: 0.34%
+exuted: d: 56, r: 200000, spec: 200000, b: 8882, rep: 400000, a: 8206, is: 8882
+600001 - 800000
+i atm: 600000

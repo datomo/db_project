@@ -19,19 +19,19 @@ class Pill:
         is_located = []
         i = 0
         id_start = db.select_one("SELECT MAX(address_id) FROM Address")[0]
-        print(id_start)
-        print(sys.maxsize)
+        print("start id from addresses: {}".format(id_start))
 
         with open(address_path) as file:
             for line in file:
                 (key, value) = line.replace("\n", "").split("#")
                 addresses[str(key)] = value
 
-        lines = sum(1 for i in open(file_path, 'rb'))
+        # lines = sum(1 for i in open(file_path, 'rb'))
+        lines = 178598027
         print("number of columns: {}".format(lines))
 
         with open(file_path, 'r') as file:
-            chunk = 100000
+            chunk = 200000
             addresses_generated = 0
 
             chunk_amount = int(float(lines) / chunk)
@@ -83,8 +83,6 @@ class Pill:
             reports_query = "INSERT INTO reports VALUES(%(b_id)s, %(trans_id)s, %(act)s, %(role)s)"
             specifies_query = "INSERT INTO specifies VALUES (%(trans_id)s, %(ndc_no)s)"
             for a_chunk in range(chunk_amount):
-
-
 
                 start_time = time.time()
 
@@ -378,8 +376,8 @@ class Pill:
         parts = add.split(" ")
         num = parts[0]
         rest = parts[1:]
-        if len(parts[1]) == 1 or (len(parts[1]) == 2 and parts[1][1] == "."):
-            num += parts[1]
+        if len(parts) >= 2 and (len(parts[1]) == 1 or (len(parts[1]) == 2 and parts[1][1] == ".")):
+            num += " "+parts[1]
             rest = parts[2:]
         rest = " ".join(rest)
 
