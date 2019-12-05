@@ -12,6 +12,9 @@ class Crime:
         i = 1
         addresses = {}
 
+        for i in range(9):
+            addresses[i] = {}
+
         lines = sum(1 for i in open(file_path, 'rb'))
         print("number of columns: {}".format(lines))
 
@@ -19,11 +22,28 @@ class Crime:
             chunk = 100000
             found_address = 0
 
-            o_query = "INSERT INTO occured_at VALUES(%(a_id)s, %(c_id)s)"
-            a_query = """INSERT INTO Address VALUES( %(id)s, %(zip)s, 
-            %(city)s, %(street)s, %(number)s, %(county)s, 
-            %(state)s, %(null)s, %(null)s, %(null)s, %(null)s)"""
-            c_query = "INSERT INTO Crime VALUES(%(id)s,%(inc)s,%(premise)s,%(on)s,%(to)s,%(cat)s)"
+            o_query = "INSERT INTO occured_at VALUES(" \
+                      "%(a_id)s, " \
+                      "%(c_id)s)"
+            a_query = "INSERT INTO Address VALUES( " \
+                      "%(id)s, " \
+                      "%(zip)s, " \
+                      "%(city)s, " \
+                      "%(street)s, " \
+                      "%(number)s, " \
+                      "%(county)s, " \
+                      "%(state)s, " \
+                      "%(null)s, " \
+                      "%(null)s, " \
+                      "%(null)s, " \
+                      "%(null)s)"
+            c_query = "INSERT INTO Crime VALUES(" \
+                      "%(id)s," \
+                      "%(inc)s," \
+                      "%(premise)s," \
+                      "%(on)s," \
+                      "%(to)s," \
+                      "%(cat)s)"
             c_data = []
             o_data = []
             a_data = []
@@ -50,8 +70,8 @@ class Crime:
                 zip = data[5] if data[5] else "NULL"
                 key = str(zip + words[1] + words[0])
 
-                if key in addresses:
-                    res = addresses[key]
+                if key in addresses[int(key[0])]:
+                    res = addresses[int(key[0])][key]
                 else:
                     res = None
 
@@ -96,7 +116,7 @@ class Crime:
                         zip = data[5] if data[5] else "NULL"
 
                         key = str(zip + words[1] + words[0])
-                        addresses[key] = a_id
+                        addresses[int(key[0])][key] = a_id
 
                 c_data.append({
                     'id': c_id,

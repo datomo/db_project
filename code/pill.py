@@ -1,8 +1,6 @@
-from itertools import islice
-import sys
+import time
 
 from database import Database
-import time
 
 
 class Pill:
@@ -118,7 +116,7 @@ class Pill:
                     r_data.append(Pill.replace_null({
                         'id': trans_id,
                         'trans_id': elements[33],
-                        'correction_no': elements[28] ,
+                        'correction_no': elements[28],
                         'action_indicator': elements[26],
                         'trans_code': elements[20],
                         'order_from_no': elements[27],
@@ -135,7 +133,6 @@ class Pill:
                     ndc_id = str(elements[22])
 
                     if ndc_id not in drugs:
-
                         d_data.append(Pill.replace_null({
                             "ndc_no": ndc_id,
                             "combined_labeler_name": elements[38],
@@ -217,7 +214,6 @@ class Pill:
                                                                                              len(a_data),
                                                                                              len(is_loc_data)))
 
-
         print("addresses generated: {}".format(addresses_generated))
         print("{}".format(i))
 
@@ -227,7 +223,7 @@ class Pill:
 
     @staticmethod
     def replace_null(obj):
-        for k,v in obj.items():
+        for k, v in obj.items():
             if v == "null":
                 obj[k] = None
         return obj
@@ -248,7 +244,7 @@ class Pill:
                 'a_id': a_id,
                 'b_id': b_id
             })
-            is_locaded_list.append(str(a_id)+str(b_id))
+            is_locaded_list.append(str(a_id) + str(b_id))
 
     @staticmethod
     def process_business(b_data, b_name, businesses, dea, inc):
@@ -310,9 +306,12 @@ class Pill:
     def process_reporter_address(a_data, addresses, addresses_generated, elements, inc):
         rep_add1 = elements[4]
         rep_add2 = elements[5]
+
+        zip = elements[8]
+
         (street_name, street_num, additional) = Pill.process_address(rep_add1, rep_add2)
 
-        if str(elements[8]) + street_name + street_num not in addresses:
+        if str(zip) + street_name + street_num not in addresses[int(zip[0])]:
             a_id = inc
 
             addresses_generated += 1
@@ -329,7 +328,7 @@ class Pill:
             # rep_add
             a_data.append({
                 'id': a_id,
-                'zip': elements[8],
+                'zip': zip,
                 'city': elements[6],
                 'street': street_name,
                 'street_number': street_num,
@@ -340,7 +339,9 @@ class Pill:
                 'latitude': None,
                 'addl_co_info': additional
             })
-            addresses[str(elements[8]) + street_name + street_num] = a_id
+            key = str(elements[8]) + street_name + street_num
+
+            addresses[int(key[0])][key] = a_id
 
 
         else:
@@ -377,7 +378,7 @@ class Pill:
         num = parts[0]
         rest = parts[1:]
         if len(parts) >= 2 and (len(parts[1]) == 1 or (len(parts[1]) == 2 and parts[1][1] == ".")):
-            num += " "+parts[1]
+            num += " " + parts[1]
             rest = parts[2:]
         rest = " ".join(rest)
 
