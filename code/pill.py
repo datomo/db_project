@@ -12,6 +12,15 @@ class Pill:
         address_path = "../data/temp/c_address.txt"
 
         addresses = {}
+
+        for i in range(10):
+            addresses[str(i)] = {}
+
+        raw_addresses = {}
+
+        for i in range(10):
+            raw_addresses[str(i)] = {}
+
         businesses = {}
         drugs = []
         is_located = []
@@ -22,7 +31,7 @@ class Pill:
         with open(address_path) as file:
             for line in file:
                 (key, value) = line.replace("\n", "").split("#")
-                addresses[str(key)] = value
+                addresses[key[0]][key] = value
 
         # lines = sum(1 for i in open(file_path, 'rb'))
         lines = 178598027
@@ -160,7 +169,7 @@ class Pill:
                     b_name = elements[2]
                     inc = 2 * i + id_start
 
-                    a_id, addresses_generated = Pill.process_reporter_address(a_data, addresses,
+                    a_id, addresses_generated = Pill.process_reporter_address(a_data, addresses, raw_addresses,
                                                                               addresses_generated, elements, inc)
 
                     b_id = Pill.process_business(b_data, b_name, businesses, dea, inc)
@@ -178,7 +187,7 @@ class Pill:
                     b_name = elements[12]
                     inc = 2 * i + 1 + id_start
 
-                    a_id, addresses_generated = Pill.process_buyer_address(a_data, addresses,
+                    a_id, addresses_generated = Pill.process_buyer_address(a_data, addresses, raw_addresses,
                                                                            addresses_generated, elements, inc)
 
                     b_id = Pill.process_business(b_data, b_name, businesses, dea, inc)
@@ -219,7 +228,8 @@ class Pill:
 
         with open("../data/temp/c_address_after_pill.txt", "w+") as file:
             for k, v in addresses.items():
-                file.write('{}#{}\n'.format(k, v))
+                for sub_k, sub_v in v.items():
+                    file.write('{}#{}\n'.format(sub_k, sub_v))
 
     @staticmethod
     def replace_null(obj):
@@ -266,12 +276,20 @@ class Pill:
         return b_id
 
     @staticmethod
-    def process_buyer_address(a_data, addresses, addresses_generated, elements, inc):
+    def process_buyer_address(a_data, addresses, raw_addresses, addresses_generated, elements, inc):
         buy_add1 = elements[14]
         buy_add2 = elements[15]
+
+        zip = elements[18]
+
+        raw_key = "{},{},{}".format(zip, buy_add1, buy_add2)
+
+        if raw_key in raw_addresses[zip[0]]:
+            return raw_addresses[zip[0]][raw_key], addresses_generated
+
         (street_name, street_num, additional) = Pill.process_address(buy_add1, buy_add2)
 
-        if str(elements[18]) + street_name + street_num not in addresses:
+        if str(zip) + street_name + street_num not in addresses[zip[0]]:
             a_id = inc
             addresses_generated += 1
 
@@ -285,7 +303,7 @@ class Pill:
             # buy_add
             a_data.append({
                 'id': a_id,
-                'zip': elements[18],
+                'zip': zip,
                 'city': elements[16],
                 'street': street_name,
                 'street_number': street_num,
@@ -296,22 +314,31 @@ class Pill:
                 'latitude': None,
                 'addl_co_info': additional
             })
-            addresses[str(elements[18]) + street_name + street_num] = a_id
+            key = str(zip) + street_name + street_num
+            pos = zip[0]
+            addresses[pos][key] = a_id
+            raw_addresses[pos]["{},{},{}".format(zip, buy_add1, buy_add2)] = a_id
+
         else:
-            a_id = addresses[str(elements[18]) + street_name + street_num]
+            a_id = addresses[zip[0]][str(elements[18]) + street_name + street_num]
 
         return a_id, addresses_generated
 
     @staticmethod
-    def process_reporter_address(a_data, addresses, addresses_generated, elements, inc):
+    def process_reporter_address(a_data, addresses, raw_addresses, addresses_generated, elements, inc):
         rep_add1 = elements[4]
         rep_add2 = elements[5]
 
         zip = elements[8]
 
+        raw_key = "{},{},{}".format(zip, rep_add1, rep_add2)
+
+        if raw_key in raw_addresses[zip[0]]:
+            return raw_addresses[zip[0]][raw_key], addresses_generated
+
         (street_name, street_num, additional) = Pill.process_address(rep_add1, rep_add2)
 
-        if str(zip) + street_name + street_num not in addresses[int(zip[0])]:
+        if str(zip) + street_name + street_num not in addresses[zip[0]]:
             a_id = inc
 
             addresses_generated += 1
@@ -339,13 +366,13 @@ class Pill:
                 'latitude': None,
                 'addl_co_info': additional
             })
-            key = str(elements[8]) + street_name + street_num
-
-            addresses[int(key[0])][key] = a_id
-
+            key = str(zip) + street_name + street_num
+            pos = zip[0]
+            addresses[pos][key] = a_id
+            raw_addresses[pos]["{},{},{}".format(zip, rep_add1, rep_add2)] = a_id
 
         else:
-            a_id = addresses[str(elements[8]) + street_name + street_num]
+            a_id = addresses[zip[0]][str(elements[8]) + street_name + street_num]
         return a_id, addresses_generated
 
     @staticmethod

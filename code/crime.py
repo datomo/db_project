@@ -12,8 +12,10 @@ class Crime:
         i = 1
         addresses = {}
 
-        for i in range(9):
+        for i in range(10):
             addresses[i] = {}
+
+        print(str(addresses))
 
         lines = sum(1 for i in open(file_path, 'rb'))
         print("number of columns: {}".format(lines))
@@ -67,10 +69,10 @@ class Crime:
                         data[5],
                         words[1],
                         words[0]))'''
-                zip = data[5] if data[5] else "NULL"
+                zip = data[5] if data[5] else "000000"
                 key = str(zip + words[1] + words[0])
 
-                if key in addresses[int(key[0])]:
+                if key and key in addresses[int(key[0])]:
                     res = addresses[int(key[0])][key]
                 else:
                     res = None
@@ -113,7 +115,7 @@ class Crime:
                             'null': None
                         })
 
-                        zip = data[5] if data[5] else "NULL"
+                        zip = data[5] if data[5] else "000000"
 
                         key = str(zip + words[1] + words[0])
                         addresses[int(key[0])][key] = a_id
@@ -145,5 +147,6 @@ class Crime:
                 print("finished...")
 
             with open("../data/temp/c_address.txt", "w+") as file:
-                for k,v in addresses.items():
-                    file.write('{}#{}\n'.format(k,v))
+                for k, v in addresses.items():
+                    for sub_k, sub_v in v.items():
+                        file.write('{}#{}\n'.format(sub_k, sub_v))
