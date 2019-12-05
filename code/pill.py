@@ -9,7 +9,8 @@ class Pill:
     # 21833 error for inc_num deleted "-"
     @staticmethod
     def add_data(db: Database):
-        file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+        # file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+        file_path = "../data/arcos_all_washpost.tsv"
         address_path = "../data/temp/c_address.txt"
 
         addresses = {}

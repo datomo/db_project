@@ -1,0 +1,7 @@
+number of columns: 264877
+time passed: 0.413
+executed 100000 rows from 264877: 37.75%
+found addresses in chunk: 73902
+time passed: 0.387
+executed 200000 rows from 264877: 75.51%
+found addresses in chunk: 90356
