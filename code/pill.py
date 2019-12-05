@@ -14,11 +14,12 @@ class Pill:
 
         addresses = {}
         businesses = {}
+        drugs = []
+        is_located = []
         i = 0
-        id_start = int(str(db.select_one("SELECT MAX(address_id) FROM Address")[0])[:-1])
+        id_start = db.select_one("SELECT MAX(address_id) FROM Address")[0]
         print(id_start)
         print(sys.maxsize)
-        a_i = 1 + id_start
 
         with open(address_path) as file:
             for line in file:
@@ -29,23 +30,18 @@ class Pill:
         print("number of columns: {}".format(lines))
 
         with open(file_path, 'r') as file:
-            chunk = 80000
+            chunk = 100000
             addresses_generated = 0
 
             chunk_amount = int(float(lines) / chunk)
             print("{}".format(chunk_amount))
-
-            a_data = []
-            b_data = []
-            r_data = []
-            d_data = []
 
             is_loc_data = []
             reports_data = []
             specifies_data = []
 
             a_query = "INSERT INTO Address VALUES(" \
-                      "%(a_id)s, " \
+                      "%(id)s, " \
                       "%(zip)s, " \
                       "%(city)s, " \
                       "%(street)s, " \
@@ -57,11 +53,12 @@ class Pill:
                       "%(latitude)s, " \
                       "%(addl_co_info)s)"
             b_query = "INSERT INTO Business VALUES(" \
-                      "%(b_id)s," \
+                      "%(id)s," \
                       "%(business_name)s, " \
                       "%(reviewed_business_id)s, " \
                       "%(dea_no)s)"
-            r_query = "INSERT INTO Reports VALUES(" \
+            r_query = "INSERT INTO Report VALUES(" \
+                      "%(id)s, " \
                       "%(trans_id)s, " \
                       "%(correction_no)s," \
                       "%(action_indicator)s," \
@@ -69,13 +66,13 @@ class Pill:
                       "%(order_from_no)s," \
                       "%(reporter_family)s," \
                       "%(trans_code)s," \
-                      "%(revised_company_name)s" \
-                      "%(measure)s" \
+                      "%(revised_company_name)s," \
+                      "%(measure)s," \
                       "%(unit)s," \
                       "%(quantity)s," \
                       "%(dosage_unit)s)"
             d_query = "INSERT INTO Drug VALUES(" \
-                      "%(ndc_id)s," \
+                      "%(ndc_no)s," \
                       "%(combined_labeler_name)s," \
                       "%(dos_str)s," \
                       "%(calc_base)s," \
@@ -87,13 +84,18 @@ class Pill:
                       "%(mme)s)"
             is_loc_query = "INSERT INTO is_located VALUES(%(a_id)s, %(b_id)s)"
             reports_query = "INSERT INTO reports VALUES(%(b_id)s, %(trans_id)s, %(act)s, %(role)s)"
-            specifies_query = "INSERT INTO specifies VALUES (%(trans_id)s, %(ndc_id)s)"
+            specifies_query = "INSERT INTO specifies VALUES (%(trans_id)s, %(ndc_no)s)"
             for a_chunk in range(chunk_amount):
 
                 start = (a_chunk * chunk) + 1
                 end = start + chunk - 1
                 if a_chunk == chunk_amount - 1:
                     end = lines
+
+                a_data = []
+                b_data = []
+                r_data = []
+                d_data = []
 
                 print("{} - {}".format(start, end))
                 print("i atm: {}".format(i))
@@ -105,14 +107,15 @@ class Pill:
                         continue
 
                     # print(line)
-                    elements = line.split('\t')
+                    elements = line.replace("\n", "").split('\t')
 
                     ## - report process
-                    trans_id = elements[33]
+                    trans_id = i
 
-                    r_data.append({
-                        'transaction_id': trans_id,
-                        'correction_no': elements[28],
+                    r_data.append(Pill.replace_null({
+                        'id': trans_id,
+                        'trans_id': elements[33],
+                        'correction_no': elements[28] ,
                         'action_indicator': elements[26],
                         'trans_code': elements[20],
                         'order_from_no': elements[27],
@@ -123,41 +126,46 @@ class Pill:
                         'unit': elements[25],
                         'quantity': elements[24],
                         'dosage_unit': elements[32]
-                    })
+                    }))
 
                     ## - drug process
-                    ndc_id = elements[22]
-                    d_data.append({
-                        "ndc_no": ndc_id,
-                        "combined_labeler_name": elements[38],
-                        "dos_str": elements[41],
-                        "calc_base": elements[31],
-                        "product_name": elements[34],
-                        "strength": elements[29],
-                        "drug_code": elements[21],
-                        "drug_name": elements[23],
-                        "ingredient_name": elements[35],
-                        "mme": elements[37]
-                    })
+                    ndc_id = str(elements[22])
+
+                    if ndc_id not in drugs:
+
+                        d_data.append(Pill.replace_null({
+                            "ndc_no": ndc_id,
+                            "combined_labeler_name": elements[38],
+                            "dos_str": elements[41],
+                            "calc_base": elements[31],
+                            "product_name": elements[34],
+                            "strength": elements[29],
+                            "drug_code": elements[21],
+                            "drug_name": elements[23],
+                            "ingredient_name": elements[35],
+                            "mme": elements[37]
+                        }))
+                        drugs.append(ndc_id)
+                    # print(elements[41])
 
                     ## - specifies process
 
                     specifies_data.append({
                         "trans_id": trans_id,
-                        "ndc_id": ndc_id
+                        "ndc_no": ndc_id
                     })
 
                     ## - reporter process
                     dea = elements[0]
                     b_name = elements[2]
-                    inc = 2 * i
+                    inc = 2 * i + id_start
 
                     a_id, addresses_generated = Pill.process_reporter_address(a_data, addresses,
                                                                               addresses_generated, elements, inc)
 
                     b_id = Pill.process_business(b_data, b_name, businesses, dea, inc)
 
-                    Pill.process_is_located(a_id, b_id, is_loc_data)
+                    Pill.process_is_located(a_id, b_id, is_loc_data, is_located)
 
                     bus_act = elements[1]
                     role = "REPORTER"
@@ -168,14 +176,14 @@ class Pill:
 
                     dea = elements[10]
                     b_name = elements[12]
-                    inc = 2 * i + 1
+                    inc = 2 * i + 1 + id_start
 
                     a_id, addresses_generated = Pill.process_buyer_address(a_data, addresses,
                                                                            addresses_generated, elements, inc)
 
                     b_id = Pill.process_business(b_data, b_name, businesses, dea, inc)
 
-                    Pill.process_is_located(a_id, b_id, is_loc_data)
+                    Pill.process_is_located(a_id, b_id, is_loc_data, is_located)
 
                     bus_act = elements[11]
                     role = "BUYER"
@@ -210,6 +218,13 @@ class Pill:
                 file.write('{}#{}\n'.format(k, v))
 
     @staticmethod
+    def replace_null(obj):
+        for k,v in obj.items():
+            if v == "null":
+                obj[k] = None
+        return obj
+
+    @staticmethod
     def process_reports(b_id, bus_act, reports_data, role, trans_id):
         reports_data.append({
             "b_id": b_id,
@@ -219,17 +234,19 @@ class Pill:
         })
 
     @staticmethod
-    def process_is_located(a_id, b_id, is_loc_data):
-        is_loc_data.append({
-            'a_id': a_id,
-            'b_id': b_id
-        })
+    def process_is_located(a_id, b_id, is_loc_data, is_locaded_list):
+        if str(a_id) + str(b_id) not in is_locaded_list:
+            is_loc_data.append({
+                'a_id': a_id,
+                'b_id': b_id
+            })
+            is_locaded_list.append(str(a_id)+str(b_id))
 
     @staticmethod
     def process_business(b_data, b_name, businesses, dea, inc):
         if dea not in businesses:
             # does not exist in db
-            b_id = str(inc) + "00"
+            b_id = inc
 
             b_data.append({
                 'id': b_id,
@@ -251,7 +268,7 @@ class Pill:
         (street_name, street_num, additional) = Pill.process_address(buy_add1, buy_add2)
 
         if str(elements[18]) + street_name + street_num not in addresses:
-            a_id = str(inc) + "00"
+            a_id = inc
             addresses_generated += 1
 
             if not additional and not elements[3] or (additional == "null" and additional == "null"):
@@ -288,7 +305,7 @@ class Pill:
         (street_name, street_num, additional) = Pill.process_address(rep_add1, rep_add2)
 
         if str(elements[8]) + street_name + street_num not in addresses:
-            a_id = str(inc) + "00"
+            a_id = inc
 
             addresses_generated += 1
             if not additional and not elements[3] or (additional == "null" and additional == "null"):
@@ -297,6 +314,9 @@ class Pill:
                 additional = "\n".join([additional, elements[3]])
             else:
                 additional = additional if additional != "null" and additional else elements[3]
+
+            if a_id == 60:
+                print(inc)
 
             # rep_add
             a_data.append({

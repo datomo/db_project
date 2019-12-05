@@ -47,8 +47,9 @@ class Database:
         try:
             self.cursor.executemany(query, data_list)
             self.db.commit()
-        except mysql.connector.Error as err:
-            print("Something went wrong: {}".format(err))
+        except mysql.connector.Error as e:
+            print("Something went wrong: {}".format(e))
+            print(query)
 
     def exists(self, table, statments):
         query = "SELECT (1) FROM {} WHERE {}".format(table, " AND ".join(statments))
@@ -78,7 +79,7 @@ class Database:
 
     def drop_all_tables(self):
         tables = ["Address", "Drug", "Crime", "Review", "Report", "Business", "Add_Business_Info", "is_located",
-                  "rates_a", "occured_at","specifies", "reports", "has"]
+                  "rates_a", "occured_at", "specifies", "reports", "has"]
         for table in tables:
             self.drop_table(table)
 

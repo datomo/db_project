@@ -15,9 +15,9 @@ CREATE TABLE Address(
 );
 
 CREATE TABLE Drug(
-  ndc_no INTEGER, 
+  ndc_no VARCHAR(20),
   combined_labeler_name VARCHAR(255),
-  dos_str FLOAT, 
+  dos_str FLOAT(9,2),
   calc_base_wt_in_gm FLOAT,
   product_name VARCHAR(255), 
   strength INTEGER,
@@ -25,7 +25,8 @@ CREATE TABLE Drug(
   drug_name VARCHAR(255),
   ingredient_name VARCHAR(255), 
   mme_conversion_factor INTEGER,
-  PRIMARY KEY (ndc_no)
+  PRIMARY KEY (ndc_no),
+  INDEX(ndc_no)
 );
 
 CREATE TABLE Crime(
@@ -52,18 +53,20 @@ CREATE TABLE Review(
 );
 
 CREATE TABLE Report(
-    transaction_id INTEGER, 
+    id BIGINT(15),
+    transaction_id BIGINT(15),
     correction_no INTEGER,
-    action_indicator INTEGER, 
-    transaction_code INTEGER,
-    order_from_no INTEGER, 
+    action_indicator VARCHAR(2),
+    transaction_code VARCHAR(2),
+    order_from_no VARCHAR(20),
     reporter_family VARCHAR(255),
     transaction_date VARCHAR(255), 
     revised_company_name VARCHAR(255),
     measure VARCHAR(255), 
-    unit INTEGER, quantity INTEGER,
+    unit INTEGER,
+    quantity INTEGER,
     dosage_unit INTEGER,
-    PRIMARY KEY (transaction_id)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE Business(
@@ -104,17 +107,17 @@ CREATE TABLE occured_at(
 );
 
 CREATE TABLE  specifies(
-    transaction_id INTEGER REFERENCES Report(transaction_id),
-    ndc_id INTEGER REFERENCES Drug(ndc_no),
+    transaction_id BIGINT(15) REFERENCES Report(id),
+    ndc_id VARCHAR(15) REFERENCES Drug(ndc_no),
     PRIMARY KEY (transaction_id, ndc_id)
 );
 
 CREATE TABLE reports(
     business_id BIGINT(15) REFERENCES Business(business_id),
-    transaction_id INTEGER REFERENCES  Report(transaction_id),
+    transaction_id BIGINT(15) REFERENCES  Report(id),
     bus_act VARCHAR(255),
     role VARCHAR(255),
-    PRIMARY KEY (business_id, transaction_id)
+    PRIMARY KEY (business_id, transaction_id, role)
 );
 
 CREATE TABLE has(
