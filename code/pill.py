@@ -36,10 +36,6 @@ class Pill:
             chunk_amount = int(float(lines) / chunk)
             print("{}".format(chunk_amount))
 
-            is_loc_data = []
-            reports_data = []
-            specifies_data = []
-
             a_query = "INSERT INTO Address VALUES(" \
                       "%(id)s, " \
                       "%(zip)s, " \
@@ -87,6 +83,10 @@ class Pill:
             specifies_query = "INSERT INTO specifies VALUES (%(trans_id)s, %(ndc_no)s)"
             for a_chunk in range(chunk_amount):
 
+
+
+                start_time = time.time()
+
                 start = (a_chunk * chunk) + 1
                 end = start + chunk - 1
                 if a_chunk == chunk_amount - 1:
@@ -96,6 +96,10 @@ class Pill:
                 b_data = []
                 r_data = []
                 d_data = []
+
+                is_loc_data = []
+                reports_data = []
+                specifies_data = []
 
                 print("{} - {}".format(start, end))
                 print("i atm: {}".format(i))
@@ -202,6 +206,10 @@ class Pill:
                 db.querymany(a_query, a_data)
                 db.querymany(is_loc_query, is_loc_data)
 
+                end_time = time.time()
+
+                print("time passed: {}".format(round(end_time - start_time, 3)))
+                print("executed {} rows from {}: {}%".format(i, lines, round(i / lines * 100, 2)))
                 print("exuted: d: {}, r: {}, spec: {}, b: {}, rep: {}, a: {}, is: {}".format(len(d_data),
                                                                                              len(r_data),
                                                                                              len(specifies_data),
@@ -209,6 +217,7 @@ class Pill:
                                                                                              len(reports_data),
                                                                                              len(a_data),
                                                                                              len(is_loc_data)))
+
 
         print("addresses generated: {}".format(addresses_generated))
         print("{}".format(i))
