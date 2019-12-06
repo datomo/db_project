@@ -60,7 +60,7 @@ CREATE TABLE Report(
     transaction_date VARCHAR(255), 
     revised_company_name VARCHAR(255),
     measure VARCHAR(255), 
-    unit INTEGER,
+    unit VARCHAR(20),
     quantity INTEGER,
     dosage_unit INTEGER,
     PRIMARY KEY (id)

@@ -1,7 +1,7 @@
 from crime import Crime
 from database import Database
 import db_parser
-from pill import Pill
+
 
 drop_tables = True
 initalize_tables = True
@@ -20,9 +20,6 @@ def main():
 
     if add_crime:
         Crime.add_data(db)
-
-    if add_pill:
-        Pill.add_data_parallel(db, 0)
 
     db.close_connection()
 

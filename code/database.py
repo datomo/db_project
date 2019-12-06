@@ -35,7 +35,8 @@ class Database:
             user=user,
             passwd=ssh_password,
             database=database,
-            connect_timeout=28800
+            connect_timeout=28800,
+            allow_local_infile=True
         )
 
     def commit(self):

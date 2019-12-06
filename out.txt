@@ -1,6 +1,0 @@
-number of columns: 178598027
-8929
-finished
-finished
-executed 20000 rows from 178598027: 0.01%
-13.654077768325806s
