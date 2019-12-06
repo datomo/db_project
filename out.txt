@@ -1,14 +1,6 @@
-{0: {}, 1: {}, 2: {}, 3: {}, 4: {}, 5: {}, 6: {}, 7: {}, 8: {}, 9: {}}
-number of columns: 264877
-time passed: 0.47
-executed 100000 rows from 264877: 37.75%
-found addresses in chunk: 73896
-time passed: 0.411
-executed 200000 rows from 264877: 75.51%
-found addresses in chunk: 90354
-finished...
 number of columns: 178598027
-892
+8929
 finished
-executed 200000 rows from 178598027: 0.11%
-202.49824237823486s
+finished
+executed 20000 rows from 178598027: 0.01%
+13.654077768325806s
