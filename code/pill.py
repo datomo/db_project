@@ -260,9 +260,9 @@ def split_address(add) -> (str, str):
 
 if __name__ == '__main__':
 #def add_data_parallel(db: Database, start: int, end=None):
-    file_path = "../data/arcos_all_washpost.tsv"
-    #file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
-    address_path = "../data/temp/c_address.txt"
+    #file_path = "../data/arcos_all_washpost.tsv"
+    file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+    #address_path = "../data/temp/c_address.txt"
 
     # processes = 1
     # pool = Pool(processes=processes)

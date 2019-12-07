@@ -27,15 +27,6 @@ CREATE TABLE Drug(
   INDEX(ndc_no)
 );
 
-CREATE TABLE Crime(
-    crime_id BIGINT(15),
-    inc_number DECIMAL(20,0),
-    premise_type VARCHAR(255), 
-    occurred_on VARCHAR(255),
-    occurred_to VARCHAR(255), 
-    ucr_crime_category VARCHAR(255),
-    PRIMARY KEY (crime_id)
-);
 
 CREATE TABLE Review(
   review_id INTEGER,

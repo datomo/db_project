@@ -3,10 +3,10 @@ from database import Database
 import db_parser
 
 
-drop_tables = True
-initalize_tables = True
-add_crime = False
-add_pill = True
+drop_tables = False
+initalize_tables = False
+add_crime = True
+add_crime_rel = True
 
 def main():
     db = Database()
@@ -20,6 +20,9 @@ def main():
 
     if add_crime:
         Crime.add_data(db)
+
+    if add_crime_rel:
+        Crime.add_rel_data(db)
 
     db.close_connection()
 

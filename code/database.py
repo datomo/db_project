@@ -43,8 +43,12 @@ class Database:
         self.db.commit()
 
     def query(self, query):
-        self.cursor.execute(query)
-        self.db.commit()
+        try:
+            self.cursor.execute(query)
+            self.db.commit()
+        except mysql.connector.Error as e:
+            print("Something went wrong: {}".format(e))
+            print(query)
 
     def querymany(self, query, data_list):
         try:
