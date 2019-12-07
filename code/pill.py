@@ -112,29 +112,12 @@ def parse_cols(cols: []):
     print("{}".format(len(a_data)))
     print("finished trans")
 
-    p = []
 
     db = Database()
     db.querymany(a_query, a_data)
     db.querymany(r_query, r_data)
     db.querymany(b_query, b_data)
     db.querymany(d_query, d_data)
-
-    '''db = []
-    for i in range(4):
-        db.append(Database())'''
-    '''db = Database()
-
-    p.append(Process(target=db.db.cursor().executemany, args=(a_query, a_data)))
-    p.append(Process(target=db.db.cursor().executemany, args=(r_query, r_data)))
-    p.append(Process(target=db.db.cursor().executemany, args=(b_query, b_data)))
-    p.append(Process(target=db.db.cursor().executemany, args=(d_query, d_data)))
-
-    for pro in p:
-        pro.start()
-
-    for pro in p:
-        pro.join()'''
 
     print("finished sending")
 
@@ -277,8 +260,8 @@ def split_address(add) -> (str, str):
 
 if __name__ == '__main__':
 #def add_data_parallel(db: Database, start: int, end=None):
-    #file_path = "../data/arcos_all_washpost.tsv"
-    file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+    file_path = "../data/arcos_all_washpost.tsv"
+    #file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
     address_path = "../data/temp/c_address.txt"
 
     # processes = 1

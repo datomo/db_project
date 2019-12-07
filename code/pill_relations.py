@@ -108,10 +108,11 @@ def process_cols(cols: [], start):
         street, street_num, additional = handle_address(elements[14], elements[15])
         dea = elements[10]
         b_name = elements[12]
+        b_id = parsed_business[str(b_name) + str(dea)]
 
         is_located_data.append({
             "a_id": parsed_address[str(zip_) + str(street) + str(street_num)],
-            "b_id": parsed_business[str(b_name) + str(dea)]
+            "b_id": b_id
         })
 
         bus_act = elements[11]
@@ -140,23 +141,29 @@ def process_cols(cols: [], start):
     # db.querymany(reports_query, reports_data)
     # db.querymany(specifies_query, specifies_data)
 
-    with open("../data/temp/is_located.txt", "a") as file:
+    with open("../data/temp/is_located.txt", "w+") as file:
+        file.truncate()
         for item in is_located_data:
-            file.write("{},{}\n".format(item["a_id"], item["b_id"]))
+            file.write('{},{}\n'.format(item["a_id"], item["b_id"]))
 
-    db.query("LOAD DATA LOCAL INFILE '../data/temp/is_located.txt' INTO TABLE is_located")
+    db.query("LOAD DATA LOCAL INFILE '../data/temp/is_located.txt' INTO TABLE is_located "
+             "FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'")
 
-    with open("../data/temp/reports.txt", "a") as file:
+    with open("../data/temp/reports.txt", "w+") as file:
+        file.truncate()
         for item in reports_data:
-            file.write("{},{}\n".format(item["business_id"], item["transaction_id"], item["bus_act"], item["role"]))
+            file.write('{},{},{},{}\n'.format(item["business_id"], item["transaction_id"], item["bus_act"], item["role"]))
 
-    db.query("LOAD DATA LOCAL INFILE '../data/temp/reports.txt' INTO TABLE reports")
+    db.query("LOAD DATA LOCAL INFILE '../data/temp/reports.txt' INTO TABLE reports "
+             "FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'")
 
-    with open("../data/temp/specifies.txt", "a") as file:
+    with open("../data/temp/specifies.txt", "w+") as file:
+        file.truncate()
         for item in specifies_data:
-            file.write("{},{}\n".format(item["transaction_id"], item["ndc_no"]))
+            file.write('{},{}\n'.format(item["transaction_id"], item["ndc_no"]))
 
-    db.query("LOAD DATA LOCAL INFILE '../data/temp/specifies.txt' INTO TABLE reports")
+    db.query("LOAD DATA LOCAL INFILE '../data/temp/specifies.txt' INTO TABLE specifies "
+             "FIELDS TERMINATED BY ',' LINES TERMINATED BY '\n'")
 
 
 
@@ -199,4 +206,5 @@ if __name__ == '__main__':
                 if j >= chunk:
                     break
 
-            process_cols(output, i - chunk_amount)
+            print("{} id: {}".format(i, i - j))
+            process_cols(output, i - j)
