@@ -169,8 +169,8 @@ def process_cols(cols: [], start):
 
 
 if __name__ == '__main__':
-    # file_path = "../data/arcos_all_washpost.tsv"
-    file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+    file_path = "../data/arcos_all_washpost.tsv"
+    # file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
 
     parse_db()
     db = Database()
@@ -206,5 +206,5 @@ if __name__ == '__main__':
                 if j >= chunk:
                     break
 
-            print("{} id: {}".format(i, i - j))
             process_cols(output, i - j)
+            print("Chunk finished {}".format(a_chunk))

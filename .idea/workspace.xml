@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="9dd38256-dad6-4815-8468-f49ffc577da1" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/code/pill.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/pill.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/pill_relations.py" beforeDir="false" afterPath="$PROJECT_DIR$/code/pill_relations.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -82,8 +81,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/code/pill.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="274" column="24" selection-start-line="274" selection-start-column="21" selection-end-line="274" selection-end-column="24" />
+            <state relative-caret-position="289">
+              <caret line="299" column="30" lean-forward="true" selection-start-line="299" selection-start-column="30" selection-end-line="299" selection-end-column="30" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -168,10 +167,10 @@
     <option name="CUSTOM_FILTER" />
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-544" />
-    <option name="y" value="-50" />
+    <option name="x" value="-14" />
+    <option name="y" value="-14" />
     <option name="width" value="3866" />
-    <option name="height" value="2026" />
+    <option name="height" value="2106" />
   </component>
   <component name="ProjectId" id="1UWAzDCJ8FmwSmVxifhqkj1l8Rg" />
   <component name="ProjectView">
@@ -404,12 +403,12 @@
       <workItem from="1575548905444" duration="1993000" />
       <workItem from="1575556209979" duration="15103000" />
       <workItem from="1575581187786" duration="4529000" />
-      <workItem from="1575643221586" duration="35847000" />
+      <workItem from="1575643221586" duration="37227000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55479000" />
+    <option name="totallyTimeSpent" value="56859000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1933" height="1053" extended-state="6" />
@@ -650,8 +649,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/code/pill.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="274" column="24" selection-start-line="274" selection-start-column="21" selection-end-line="274" selection-end-column="24" />
+        <state relative-caret-position="289">
+          <caret line="299" column="30" lean-forward="true" selection-start-line="299" selection-start-column="30" selection-end-line="299" selection-end-column="30" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>

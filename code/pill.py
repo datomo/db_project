@@ -304,7 +304,7 @@ if __name__ == '__main__':
             # print("executed {} rows from {}: {}%".format(i, lines, round(i / lines * 100, 2)))
             # break
             ## hand to processe
-            print("WORKING ON NEW CHUNK {}", j)
+            print("WORKING ON NEW CHUNK {}".format(a_chunk))
             start = time.time()
             parse_cols(output)
             print("{}s part".format(time.time() - start))
