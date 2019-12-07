@@ -1,12 +1,13 @@
 from crime import Crime
 from database import Database
 import db_parser
-
+from yelp import Yelp
 
 drop_tables = False
 initalize_tables = False
-add_crime = True
-add_crime_rel = True
+add_crime = False
+add_crime_rel = False
+add_yelp = True
 
 def main():
     db = Database()
@@ -23,6 +24,9 @@ def main():
 
     if add_crime_rel:
         Crime.add_rel_data(db)
+
+    if add_yelp:
+        Yelp.add_data_business(db)
 
     db.close_connection()
 

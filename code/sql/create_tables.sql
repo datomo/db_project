@@ -27,19 +27,6 @@ CREATE TABLE Drug(
   INDEX(ndc_no)
 );
 
-
-CREATE TABLE Review(
-  review_id INTEGER,
-  user_id INTEGER, 
-  date VARCHAR(255), 
-  text TEXT,
-  cool INTEGER, 
-  funny INTEGER, 
-  useful INTEGER,
-  stars INTEGER,
-  PRIMARY KEY (review_id)
-);
-
 CREATE TABLE Report(
     id BIGINT(15) AUTO_INCREMENT,
     transaction_id BIGINT(15),

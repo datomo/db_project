@@ -5,40 +5,8 @@ from multiprocessing import Process
 import math
 
 
-#class Pill
+# class Pill
 # 21833 error for inc_num deleted "-"
-'''
-is_loc_query = "INSERT INTO is_located VALUES(%(a_id)s, %(b_id)s)"
-reports_query = "INSERT INTO reports VALUES(%(b_id)s, %(trans_id)s, %(act)s, %(role)s)"
-specifies_query = "INSERT INTO specifies VALUES (%(trans_id)s, %(ndc_no)s)"
-
-## - specifies process
-
-specifies_data.append({
-    "trans_id": trans_id,
-    "ndc_no": ndc_id
-})
-
-
-process_is_located(a_id, b_id, is_loc_data, is_located)
-
-bus_act = elements[1]
-role = "REPORTER"
-
-process_reports(b_id, bus_act, reports_data, role, trans_id)
-
-
-    print("time passed: {}".format(round(end_time - start_time, 3)))
-    print("executed {} rows from {}: {}%".format(i, lines, round(i / lines * 100, 2)))
-    print("exuted: d: {}, r: {}, spec: {}, b: {}, rep: {}, a: {}, is: {}".format(len(d_data),
-                                                                                 len(r_data),
-                                                                                 len(specifies_data),
-                                                                                 len(b_data),
-                                                                                 len(reports_data),
-                                                                                 len(a_data),
-                                                                                 len(is_loc_data)))
-
-'''
 def parse_cols(cols: []):
     a_query = "INSERT IGNORE INTO Address VALUES(" \
               "%(zip)s, " \
@@ -103,7 +71,6 @@ def parse_cols(cols: []):
 
         process_drug(d_data, elements, str(elements[22]))
 
-
     print("finished comp")
     print("{}".format(len(a_data)))
     a_data = [dict(t) for t in {tuple(d.items()) for d in a_data}]
@@ -112,7 +79,6 @@ def parse_cols(cols: []):
     print("{}".format(len(a_data)))
     print("finished trans")
 
-
     db = Database()
     db.querymany(a_query, a_data)
     db.querymany(r_query, r_data)
@@ -120,11 +86,6 @@ def parse_cols(cols: []):
     db.querymany(d_query, d_data)
 
     print("finished sending")
-
-
-
-
-
 
 
 def process_drug(d_data, elements, ndc_id):
@@ -212,7 +173,6 @@ def process_is_located(a_id, b_id, is_loc_data, is_locaded_list):
 
 
 def process_business(b_data, b_name, dea):
-
     b_data.append({
         'business_name': b_name,
         'reviewed_business_id': None,
@@ -259,17 +219,16 @@ def split_address(add) -> (str, str):
 
 
 if __name__ == '__main__':
-#def add_data_parallel(db: Database, start: int, end=None):
-    #file_path = "../data/arcos_all_washpost.tsv"
+    # def add_data_parallel(db: Database, start: int, end=None):
+    # file_path = "../data/arcos_all_washpost.tsv"
     file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
-    #address_path = "../data/temp/c_address.txt"
+    # address_path = "../data/temp/c_address.txt"
 
     # processes = 1
     # pool = Pool(processes=processes)
 
     with open(file_path, 'r') as file:
         chunk = 2000000
-        processor_chunk = 1
 
         lines = sum(1 for i in open(file_path, 'rb'))
         # lines = 178598027
@@ -281,8 +240,6 @@ if __name__ == '__main__':
         i = 0
 
         start_time = time.time()
-
-        iterations = int(float(chunk_amount) / processor_chunk)
 
         for a_chunk in range(chunk_amount):
 
@@ -312,9 +269,7 @@ if __name__ == '__main__':
         # map to pool of workers
         print("{}s".format(time.time() - start_time))
     db = Database()
-    db.query("ALTER TABLE Address DROP PRIMARY KEY, ADD COLUMN id BIGINT(15) PRIMARY KEY AUTO_INCREMENT, ADD INDEX comp(zip, street, street_number) ")
-    db.query("ALTER TABLE Business DROP PRIMARY KEY, ADD COLUMN id BIGINT(15) PRIMARY KEY AUTO_INCREMENT, ADD INDEX comp(DEA_No, business_name) ")
-
-
-
-
+    db.query(
+        "ALTER TABLE Address DROP PRIMARY KEY, ADD COLUMN id BIGINT(15) PRIMARY KEY AUTO_INCREMENT, ADD INDEX comp(zip, street, street_number) ")
+    db.query(
+        "ALTER TABLE Business DROP PRIMARY KEY, ADD COLUMN id BIGINT(15) PRIMARY KEY AUTO_INCREMENT, ADD INDEX comp(DEA_No, business_name) ")
