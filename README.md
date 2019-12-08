@@ -20,7 +20,7 @@ python -m pip install mysql-connector
 
 * "locally" running mysql instance 
 
-  * with a configured database with the name ```db_project```
+  * with a configured schema with the name ```db_project```
    and following access parameters
 
         port = 3306
