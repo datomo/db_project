@@ -3,6 +3,9 @@ import time
 
 from database import Database
 
+# file_path = "../data/arcos_all_washpost.tsv"
+file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+
 
 class Pill:
     # class Pill
@@ -60,7 +63,7 @@ class Pill:
             a_data = Pill.process_address(a_data, elements, positions)
             positions = [14, 15, 13, 18, 16, 19, 17]
             a_data = Pill.process_address(a_data, elements, positions)
-            Pill.proccess_report(elements, r_data)
+            Pill.process_report(elements, r_data)
 
             dea = elements[0]
             b_name = elements[2]
@@ -103,7 +106,7 @@ class Pill:
         }))
 
     @staticmethod
-    def proccess_report(elements, r_data):
+    def process_report(elements, r_data):
         r_data.append(Pill.replace_null({
             'trans_id': elements[33],
             'correction_no': elements[28],
@@ -219,13 +222,7 @@ class Pill:
 
     @staticmethod
     def add_data(db: Database):
-        # def add_data_parallel(db: Database, start: int, end=None):
-        # file_path = "../data/arcos_all_washpost.tsv"
-        file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
-        # address_path = "../data/temp/c_address.txt"
-
-        # processes = 1
-        # pool = Pool(processes=processes)
+        global file_path
 
         with open(file_path, 'r') as file:
             chunk = 2000000

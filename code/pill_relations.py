@@ -4,6 +4,9 @@ import time
 import db_parser
 from database import Database
 
+# file_path = "../data/arcos_all_washpost.tsv"
+file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+
 
 class Pill_relations:
 
@@ -159,8 +162,7 @@ class Pill_relations:
 
     @staticmethod
     def add_data(db: Database):
-        # file_path = "../data/arcos_all_washpost.tsv"
-        file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+        global file_path
 
         Pill_relations.parse_db(db)
         queries = db_parser.transform_sql("./sql/create_rel_tables.sql")
