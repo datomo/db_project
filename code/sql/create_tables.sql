@@ -1,5 +1,4 @@
 CREATE TABLE Address(
-    address_id BIGINT(15),
     zip INTEGER,
     city VARCHAR(255), 
     street VARCHAR(255),
@@ -10,8 +9,7 @@ CREATE TABLE Address(
     longitude INTEGER, 
     latitude INTEGER,
     addl_co_info VARCHAR(255),
-    PRIMARY KEY (address_id),
-    INDEX (zip, street, street_number)
+    PRIMARY KEY (zip, street, street_number)
 );
 
 CREATE TABLE Drug(
@@ -29,31 +27,8 @@ CREATE TABLE Drug(
   INDEX(ndc_no)
 );
 
-CREATE TABLE Crime(
-    crime_id BIGINT(15),
-    inc_number DECIMAL(20,0),
-    premise_type VARCHAR(255), 
-    occurred_on VARCHAR(255),
-    occurred_to VARCHAR(255), 
-    ucr_crime_category VARCHAR(255),
-    PRIMARY KEY (crime_id)
-);
-
-CREATE TABLE Review(
-  review_id INTEGER, 
-  business_id INTEGER REFERENCES Business(business_id),
-  user_id INTEGER, 
-  date VARCHAR(255), 
-  text TEXT,
-  cool INTEGER, 
-  funny INTEGER, 
-  useful INTEGER,
-  stars INTEGER,
-  PRIMARY KEY (review_id)
-);
-
 CREATE TABLE Report(
-    id BIGINT(15),
+    id BIGINT(15) AUTO_INCREMENT,
     transaction_id BIGINT(15),
     correction_no INTEGER,
     action_indicator VARCHAR(2),
@@ -63,64 +38,16 @@ CREATE TABLE Report(
     transaction_date VARCHAR(255), 
     revised_company_name VARCHAR(255),
     measure VARCHAR(255), 
-    unit INTEGER,
+    unit VARCHAR(20),
     quantity INTEGER,
     dosage_unit INTEGER,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE Business(
-    business_id BIGINT(15),
     business_name VARCHAR(255),
-    revied_business_id VARCHAR(255),
+    reviewed_business_id VARCHAR(255),
     DEA_No VARCHAR(255),
-    PRIMARY KEY (business_id)
+    PRIMARY KEY (DEA_No, business_name)
 );
 
-CREATE TABLE Add_Business_Info(
-    abi_id INTEGER, 
-    is_open INTEGER, 
-    review_count INTEGER,
-    avg_stars Integer, 
-    categories VARCHAR(255),
-    hours INTEGER, 
-    attributes VARCHAR(255),
-    PRIMARY KEY (abi_id)
-);
-
-CREATE TABLE is_located(
-  address_id BIGINT(15) REFERENCES Address(address_id),
-  business_id BIGINT(15) REFERENCES Business(business_id),
-  PRIMARY KEY (address_id, business_id)
-);
-
-CREATE TABLE rates_a(
-  review_id INTEGER REFERENCES Review(review_id),
-  business_id BIGINT(15) REFERENCES Business(business_id),
-  PRIMARY KEY (review_id, business_id)
-);
-
-CREATE TABLE occured_at(
-    address_id BIGINT(15) REFERENCES Address(address_id),
-    crime_id BIGINT(15) REFERENCES Crime(crime_id),
-    PRIMARY KEY (address_id, crime_id)
-);
-
-CREATE TABLE  specifies(
-    transaction_id BIGINT(15) REFERENCES Report(id),
-    ndc_id VARCHAR(15) REFERENCES Drug(ndc_no),
-    PRIMARY KEY (transaction_id, ndc_id)
-);
-
-CREATE TABLE reports(
-    business_id BIGINT(15) REFERENCES Business(business_id),
-    transaction_id BIGINT(15) REFERENCES  Report(id),
-    bus_act VARCHAR(255),
-    role VARCHAR(255),
-    PRIMARY KEY (business_id, transaction_id, role)
-);
-
-CREATE TABLE has(
-    business_id BIGINT(15) REFERENCES Business (business_id),
-    abi_id INTEGER REFERENCES  Add_Business_Info(abi_id)
-);
