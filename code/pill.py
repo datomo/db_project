@@ -4,8 +4,8 @@ from multiprocessing import Process, Pool
 
 from database import Database
 
-#file_path = "../data/arcos_all_washpost.tsv"
-file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+file_path = "../data/arcos_all_washpost.tsv"
+# file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
 
 
 class Pill:
@@ -269,6 +269,6 @@ class Pill:
             print("{}s".format(time.time() - start_time))
 
         db.query(
-            "ALTER TABLE Address DROP PRIMARY KEY, ADD COLUMN id BIGINT(15) PRIMARY KEY AUTO_INCREMENT, ADD INDEX comp(zip, street, street_number) ")
+            "ALTER TABLE Address DROP PRIMARY KEY, ADD COLUMN id BIGINT(15) UNIQUE PRIMARY KEY AUTO_INCREMENT, ADD INDEX comp(zip, street, street_number) ")
         db.query(
-            "ALTER TABLE Business DROP PRIMARY KEY, ADD COLUMN id BIGINT(15) PRIMARY KEY AUTO_INCREMENT, ADD INDEX comp(DEA_No, business_name) ")
+            "ALTER TABLE Business DROP PRIMARY KEY, ADD COLUMN id BIGINT(15) UNIQUE PRIMARY KEY AUTO_INCREMENT, ADD INDEX comp(DEA_No, business_name) ")
