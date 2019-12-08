@@ -4,8 +4,8 @@ import time
 import db_parser
 from database import Database
 
-# file_path = "../data/arcos_all_washpost.tsv"
-file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+file_path = "../data/arcos_all_washpost.tsv"
+# file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
 
 
 class Pill_relations:
@@ -63,7 +63,6 @@ class Pill_relations:
         parsed_business = dict(zip(keys, ids))
 
         print("Finished parsing")
-        db.close_connection()
 
     @staticmethod
     def process_cols(cols: [], start, db:Database):

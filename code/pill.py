@@ -1,9 +1,10 @@
 import math
 import time
+from multiprocessing import Process, Pool
 
 from database import Database
 
-# file_path = "../data/arcos_all_washpost.tsv"
+#file_path = "../data/arcos_all_washpost.tsv"
 file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
 
 
@@ -87,6 +88,7 @@ class Pill:
         db.querymany(r_query, r_data)
         db.querymany(b_query, b_data)
         db.querymany(d_query, d_data)
+
 
         print("finished sending")
 

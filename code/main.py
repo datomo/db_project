@@ -5,12 +5,12 @@ from pill import Pill
 from pill_relations import Pill_relations
 from yelp import Yelp
 
-drop_tables = False
-initalize_tables = False
-add_pill = False
-add_pill_rel = False
-add_crime = False
-add_crime_rel = False
+drop_tables = True
+initalize_tables = True
+add_pill = True
+add_pill_rel = True
+add_crime = True
+add_crime_rel = True
 add_yelp = True
 
 

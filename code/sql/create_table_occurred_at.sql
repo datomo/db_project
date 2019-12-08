@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS Crime(
 );
 
 CREATE TABLE IF NOT EXISTS occured_at(
-    address_id BIGINT(15) REFERENCES Address(id),
-    crime_id BIGINT(15) REFERENCES Crime(crime_id),
-    PRIMARY KEY (address_id, crime_id)
+    address_id BIGINT(15),
+    crime_id BIGINT(15),
+    PRIMARY KEY (address_id, crime_id),
+    FOREIGN KEY (address_id) REFERENCES Address(id),
+    FOREIGN KEY (crime_id) REFERENCES Crime(crime_id
 );

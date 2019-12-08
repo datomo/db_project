@@ -10,7 +10,7 @@ ssh_password = 'db_project2019'
 # database variables
 user = 'root'
 password = 'd7730e905d7c2a007371051d2060cc8d9de4ba9230e7bfc8'
-database = 'db_project'
+database = 'db_multiprocess'
 
 
 class Database:
@@ -18,6 +18,7 @@ class Database:
         self.open_connection()
         self.cursor = self.db.cursor()
         self.query("SET GLOBAL max_allowed_packet=1073741824")
+        self.query("SET autocommit = 0")
         self.buffered_cursor = self.db.cursor(buffered=True)
 
     def open_connection(self):
@@ -79,7 +80,7 @@ class Database:
 
     def query_all(self, queries):
         for query in queries:
-            self.cursor.execute(query)
+            self.query(query)
 
     def drop_table(self, table):
         self.query("DROP TABLE IF EXISTS {}".format(table))
