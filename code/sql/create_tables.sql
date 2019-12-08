@@ -51,13 +51,3 @@ CREATE TABLE Business(
     PRIMARY KEY (DEA_No, business_name)
 );
 
-CREATE TABLE Add_Business_Info(
-    abi_id INTEGER, 
-    is_open INTEGER, 
-    review_count INTEGER,
-    avg_stars Integer, 
-    categories VARCHAR(255),
-    hours INTEGER, 
-    attributes VARCHAR(255),
-    PRIMARY KEY (abi_id)
-);
