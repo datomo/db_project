@@ -1,8 +1,8 @@
+import math
 import time
 
 from database import Database
-from multiprocessing import Process
-import math
+
 
 class Pill:
     # class Pill

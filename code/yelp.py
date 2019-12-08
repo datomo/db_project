@@ -1,9 +1,9 @@
 import json
+import math
+import time
 
 import db_parser
 from database import Database
-import math
-import time
 
 
 class Yelp:
@@ -137,7 +137,6 @@ class Yelp:
         res = db.select("SELECT zip, street, id FROM Address WHERE zip IN ({})".format(str(codes)[1:-1]))
         global parsed_addresses
         parsed_addresses = dict([(str(x[0]) + x[1], x[2]) for x in res])
-
 
     @staticmethod
     def get_businesses(db: Database, names):
