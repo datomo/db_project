@@ -1,0 +1,7 @@
+number of columns: 2296627
+2
+WORKING ON NEW CHUNK 0
+finished comp
+4000000
+1954
+finished trans
