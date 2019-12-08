@@ -1,4 +1,5 @@
-# Database Project
+# Gruppe 4: Part 2: Data Integration
+
 ## Pain Pill Usage, Crime Rate and Yelp Reviews
 
 This repositiory should serve as a base for all the needed stuff for our database project of the database course
@@ -17,11 +18,17 @@ python -m pip install mysql-connector
 
 ## Setup
 
-* "local" running mysql instance on default port 3306 
+* "locally" running mysql instance 
 
   * with a configured database with the name ```db_project```
+   and following access parameters
+
+        port = 3306
+        username = root
+        password = db_project2019
+
   
-  (*both options can be configured in the ```database.py file```*)
+  (*configured in the ```database.py file```*)
   
 * Data source files are not included in the reporsitory, for more check out **Data Files**
   
@@ -45,6 +52,8 @@ The setup needs to run in sequence
 * [MySQL](https://www.mysql.com/) - SQL dialect
 
 * [Python](https://www.python.org/) - Python 3.8
+
+* [MySQL Connector](https://www.mysql.com/products/connector/) - Python Mysql connector
 
 
 ## Authors
