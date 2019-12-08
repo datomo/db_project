@@ -4,7 +4,6 @@ import db_parser
 from database import Database
 import math
 import time
-import ijson
 
 
 class Yelp:
