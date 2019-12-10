@@ -34,8 +34,8 @@ def process_cols(cols, start_i, queue):
         city_1 = str(a_1["city"]) if a_1["city"] else "#"
         city_2 = str(a_2["city"]) if a_1["city"] else "#"
 
-        key_1 = "{}-{}-{}".format(state_1, city_1, zip_1)
-        key_2 = "{}-{}-{}".format(state_2, city_2, zip_2)
+        key_1 = "{}-{}-{}".format(state_1, city_1.replace("/", "##"), zip_1)
+        key_2 = "{}-{}-{}".format(state_2, city_2.replace("/", "##"), zip_2)
         if key_1 not in addresses:
             addresses[key_1] = []
         if key_2 not in addresses:
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     os.makedirs(file_prefix)
 
     with open(file_path, 'r') as file:
-        chunk = 10000
+        chunk = 2000000
         processes = 2
         # lines = sum(1 for i in open(file_path, 'rb'))
         lines = 178598027
@@ -174,7 +174,6 @@ if __name__ == '__main__':
             # process_cols(output)
             if len(results) >= processes - 1:
                 print("started waiting...")
-                q.get()
                 [result.get() for result in results]
                 results = []
                 print("Chunk finished {}, time needed {}".format(a_chunk, round(time.time() - start_time, 2)))
