@@ -10,7 +10,7 @@ ssh_password = 'db_project2019'
 # database variables
 user = 'root'
 password = 'd7730e905d7c2a007371051d2060cc8d9de4ba9230e7bfc8'
-database = 'db_project'
+database = 'db_multiprocess'
 
 
 class Database:
