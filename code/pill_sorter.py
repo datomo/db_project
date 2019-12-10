@@ -3,7 +3,7 @@ import os
 import shutil
 import time
 import pickle
-from multiprocessing import Manager
+from multiprocessing import Manager, Queue, Process
 from multiprocessing.pool import Pool
 
 from pill import Pill
@@ -13,16 +13,19 @@ file_path = "../data/arcos_all_washpost.tsv"
 file_prefix = "./states"
 
 
-def process_cols(cols, q):
+def process_cols(cols, start_i, queue):
     print("starting process")
     addresses = {}
+    i_col = start_i
 
     for col in cols:
         elements = col.replace("\n", "").split('\t')
         positions = [4, 5, 3, 8, 6, 9, 7]
         a_1 = process_address(elements, positions)
+        a_1["trans"] = [i_col]
         positions = [14, 15, 13, 18, 16, 19, 17]
         a_2 = process_address(elements, positions)
+        a_2["trans"] = [i_col]
 
         state_1 = str(a_1["state"]) if a_1["state"] else "#"
         state_2 = str(a_2["state"]) if a_2["state"] else "#"
@@ -40,21 +43,28 @@ def process_cols(cols, q):
 
         addresses[key_1].append(a_1)
         addresses[key_2].append(a_2)
+        i_col += 1
 
-        q.put(addresses)
+    queue.put(addresses)
 
     return None
 
 
-def save_as_pickle(q):
-    while 1:
-        addresses = q.get()
+def save_as_pickle(queue):
+    while True:
+        addresses = queue.get()
+        print("got something to write")
+        print(len(addresses.items()))
         if addresses == "stop":
             break
-        for k, v in addresses.items():
-            with open(file_prefix + "/" + k + ".pkl", "ab+") as state_file:
-                for address in addresses[k]:
-                    pickle.dump(address, state_file, 0)
+        for k in addresses:
+            state_file = open(file_prefix + "/" + k + ".pkl", "ab+")
+            for address in addresses[k]:
+                pickle.dump(address, state_file)
+            state_file.flush()
+            state_file.close()
+        print("finished writing")
+        time.sleep(20)
 
 
 def process_address(elements, positions):
@@ -127,8 +137,8 @@ if __name__ == '__main__':
     os.makedirs(file_prefix)
 
     with open(file_path, 'r') as file:
-        chunk = 1000000
-        processes = 6
+        chunk = 10000
+        processes = 2
         # lines = sum(1 for i in open(file_path, 'rb'))
         lines = 178598027
         print("number of columns: {}".format(lines))
@@ -140,10 +150,10 @@ if __name__ == '__main__':
 
         start_time = time.time()
 
+        p = Pool(processes=processes)
         manager = Manager()
         q = manager.Queue()
-        p = Pool(processes=processes)
-        file_writer = p.apply_async(save_as_pickle, (q,))
+        writer = p.apply_async(save_as_pickle, (q,))
 
         results = []
         for a_chunk in range(chunk_amount):
@@ -160,16 +170,14 @@ if __name__ == '__main__':
 
                 if j >= chunk:
                     break
-                results
 
             # process_cols(output)
             if len(results) >= processes - 1:
                 print("started waiting...")
-                [result.wait() for result in results]
+                q.get()
+                [result.get() for result in results]
                 results = []
                 print("Chunk finished {}, time needed {}".format(a_chunk, round(time.time() - start_time, 2)))
-            results.append(p.apply_async(process_cols, (output,)))
-        q.put("stop")
+            results.append(p.apply_async(process_cols, (output, i, q,)))
         p.close()
         p.close()
-
