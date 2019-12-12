@@ -9,10 +9,12 @@ from pill import Pill
 file_path = "../data/arcos_all_washpost.tsv"
 # file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
 file_prefix = "./states"
+business_location = "./business"
 
 
 def process_cols(cols):
-    addresses = {}
+    # addresses = {}
+    businesses = {}
 
     for col in cols:
         elements = col.replace("\n", "").split('\t')
@@ -20,6 +22,14 @@ def process_cols(cols):
         a_1 = process_address(elements, positions)
         positions = [14, 15, 13, 18, 16, 19, 17]
         a_2 = process_address(elements, positions)
+
+        dea = elements[0]
+        b_name = elements[2]
+        b_1 = process_business(b_name, dea)
+
+        dea = elements[10]
+        b_name = elements[12]
+        b_2 = process_business(b_name, dea)
 
         state_1 = str(a_1["state"]) if a_1["state"] else "#"
         state_2 = str(a_2["state"]) if a_2["state"] else "#"
@@ -30,26 +40,39 @@ def process_cols(cols):
 
         key_1 = "{}-{}-{}".format(state_1, city_1.replace("/", "##"), zip_1)
         key_2 = "{}-{}-{}".format(state_2, city_2.replace("/", "##"), zip_2)
-        if key_1 not in addresses:
-            addresses[key_1] = []
-        if key_2 not in addresses:
-            addresses[key_2] = []
+        '''if key_1 not in addresses:
+            addresses[key_1] = []'''
+        if key_1 not in businesses:
+            businesses[key_1] = []
+        '''if key_2 not in addresses:
+            addresses[key_2] = []'''
+        if key_2 not in businesses:
+            businesses[key_2] = []
 
-        addresses[key_1].append(a_1)
-        addresses[key_2].append(a_2)
+        # addresses[key_1].append(a_1)
+        # addresses[key_2].append(a_2)
+        businesses[key_1].append(b_1.update(a_1))
+        businesses[key_2].append(b_2.update(a_2))
 
-    save_as_pickle(addresses)
+    # save_as_pickle(addresses, file_prefix)
+    save_as_pickle(businesses, business_location)
 
-    return None
 
-
-def save_as_pickle(addresses):
-    for k in addresses:
-        state_file = open(file_prefix + "/" + k + ".pkl", "ab+")
-        for address in addresses[k]:
+def save_as_pickle(obj, location):
+    for k in obj:
+        state_file = open(location + "/" + k + ".pkl", "ab+")
+        for address in obj[k]:
             pickle.dump(address, state_file)
         state_file.flush()
         state_file.close()
+
+
+def process_business(b_name, dea):
+    return {
+        'business_name': b_name,
+        'reviewed_business_id': None,
+        'dea_no': dea
+    }
 
 
 def process_address(elements, positions):
@@ -117,9 +140,9 @@ def split_address(add) -> (str, str):
 
 
 if __name__ == '__main__':
-    if os.path.exists(file_prefix):
-        shutil.rmtree(file_prefix)
-    os.makedirs(file_prefix)
+    if os.path.exists(business_location):
+        shutil.rmtree(business_location)
+    os.makedirs(business_location)
 
     with open(file_path, 'r') as file:
         chunk = 2000000

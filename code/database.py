@@ -19,7 +19,7 @@ class Database:
         self.cursor = self.db.cursor()
         self.query("SET GLOBAL max_allowed_packet=1073741824")
         self.query("SET autocommit = 0")
-        self.query("SET FOREIGN_KEY_CHECKS=0;")
+        # self.query("SET FOREIGN_KEY_CHECKS=0;")
         self.buffered_cursor = self.db.cursor(buffered=True)
 
     def open_connection(self):

@@ -6,7 +6,7 @@ from multiprocessing import Pool
 from os import listdir
 from os.path import isfile, join
 
-file_prefix = "states"
+file_prefix = "business"
 filtered_files = "./{}/filtered".format(file_prefix)
 
 
