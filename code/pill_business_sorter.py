@@ -8,7 +8,6 @@ from pill import Pill
 
 file_path = "../data/arcos_all_washpost.tsv"
 # file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
-file_prefix = "./states"
 business_location = "./business"
 
 
@@ -18,43 +17,45 @@ def process_cols(cols):
 
     for col in cols:
         elements = col.replace("\n", "").split('\t')
-        positions = [4, 5, 3, 8, 6, 9, 7]
-        a_1 = process_address(elements, positions)
-        positions = [14, 15, 13, 18, 16, 19, 17]
-        a_2 = process_address(elements, positions)
 
         dea = elements[0]
-        b_name = elements[2]
-        b_1 = process_business(b_name, dea)
+        b_name_1 = elements[2]
+        b_1 = process_business(b_name_1, dea)
 
         dea = elements[10]
-        b_name = elements[12]
-        b_2 = process_business(b_name, dea)
+        b_name_2 = elements[12]
+        b_2 = process_business(b_name_1, dea)
 
-        state_1 = str(a_1["state"]) if a_1["state"] else "#"
-        state_2 = str(a_2["state"]) if a_2["state"] else "#"
-        zip_1 = str(a_1["zip"]) if a_1["zip"] else "#"
-        zip_2 = str(a_2["zip"]) if a_1["zip"] else "#"
-        city_1 = str(a_1["city"]) if a_1["city"] else "#"
-        city_2 = str(a_2["city"]) if a_1["city"] else "#"
+        b_key_1 = "##"
+        if len(b_name_1) >= 2:
+            b_key_1 = str(b_name_1)[:2]
+        elif len(b_name_1) == 1:
+            b_key_1 = "#" + str(b_name_1)[:1]
 
-        key_1 = "{}-{}-{}".format(state_1, city_1.replace("/", "##"), zip_1)
-        key_2 = "{}-{}-{}".format(state_2, city_2.replace("/", "##"), zip_2)
+        b_key_2 = "##"
+        if len(b_name_2) >= 2:
+            b_key_2 = str(b_name_2)[:2]
+        elif len(b_name_2) == 1:
+            b_key_2 = "#" + str(b_name_2)[:1]
+
+        b_key_1 = b_key_1.replace("/","##")
+        b_key_2 = b_key_1.replace("/", "##")
+
+
         '''if key_1 not in addresses:
             addresses[key_1] = []'''
-        if key_1 not in businesses:
-            businesses[key_1] = []
+        if b_key_1 not in businesses:
+            businesses[b_key_1] = []
         '''if key_2 not in addresses:
             addresses[key_2] = []'''
-        if key_2 not in businesses:
-            businesses[key_2] = []
+        if b_key_2 not in businesses:
+            businesses[b_key_2] = []
 
         # addresses[key_1].append(a_1)
         # addresses[key_2].append(a_2)
-        b_1.update(a_1)
-        b_2.update(a_2)
-        businesses[key_1].append(b_1)
-        businesses[key_2].append(b_2)
+
+        businesses[b_key_1].append(b_1)
+        businesses[b_key_2].append(b_2)
 
     # save_as_pickle(addresses, file_prefix)
     save_as_pickle(businesses, business_location)

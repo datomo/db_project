@@ -9,35 +9,36 @@ from os.path import isfile, join
 import db_parser
 from database import Database
 
-file_prefix = "states"
+file_prefix = "business"
+
+
+b_query = "INSERT INTO Business(business_name, reviewed_business_id, DEA_No) VALUES(" \
+          "%(business_name)s, " \
+          "%(reviewed_business_id)s, " \
+          "%(dea_no)s)"
 
 master = []
 i = 0
 
-
 def filter_file(path):
     global master, i
-    addresses = []
-
+    businesses = []
+    # names = path.replace(".pkl", "").replace("##", "/").split("-")
     with open("./{}/{}".format(file_prefix, path), "rb") as file:
         while True:
             try:
-                master.append(pickle.load(file))
-
+                businesses.append(pickle.load(file))
             except EOFError:
                 break
 
-    # print(len(master))
-    i += 1
-    if i % 100 == 0:
-        print("Chuncked finished: {}".format(i))
+    businesses = [dict(t) for t in {tuple(d.items()) for d in master}]
+    master.append(businesses)
 
-    if len(master) > 500000:
-        master = [dict(t) for t in {tuple(d.items()) for d in master}]
+    if len(master) > 10000:
         insert(master, db)
         master = []
-        print("too many addresses")
-    # insert(businesses, db)
+        print("inserting 1000 businesses")
+    #insert(businesses, db)
     # addresses = db.select("SELECT * FROM Adress WHERE state = %s AND city = %s AND zip = %s ;".format(names))
     # print("finished file after {}s".format(round(time.time() - start, 2)))
 
