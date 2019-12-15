@@ -8,7 +8,7 @@ from pill import Pill
 
 file_path = "../data/arcos_all_washpost.tsv"
 # file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
-file_prefix = "./states"
+file_prefix = "./address"
 
 
 def process_cols(cols):
@@ -113,7 +113,9 @@ def split_address(add) -> (str, str):
         else:
             street += part + " "
 
-    return street.strip(), num.strip()
+        street = street.strip()
+        num = num.strip()
+    return street if street != "" else None, num if num != "" else None
 
 
 if __name__ == '__main__':

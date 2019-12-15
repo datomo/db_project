@@ -71,6 +71,7 @@ class Database:
     def select(self, query):
         self.cursor.execute(query)
         fetch = self.cursor.fetchall()
+        print(self.cursor.fetchwarnings())
         return fetch
 
     def select_one(self, query):

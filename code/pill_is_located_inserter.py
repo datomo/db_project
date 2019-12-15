@@ -20,18 +20,23 @@ i = 0
 def filter_file(path):
     global master, i, businesses
     names = path.replace(".pkl", "").replace("##", "/").split("-")
+    print(names)
     res = db.select(
-        "SELECT street, street_number, id FROM Address WHERE state = '{}' AND city = '{}' AND zip = '{}' ;".format(
+        "SELECT street, street_number, id, zip FROM Address WHERE state = '{}' AND city = '{}' AND zip = {} ;".format(
             *names))
-    addresses = {f[0] + f[1]: f[2] for f in res}
+    print("SELECT street, street_number, id, zip FROM Address WHERE state = '{}' AND city = '{}' AND zip = {} ;".format(
+            *names))
+    print(res)
+    addresses = {(f[0] if f[0] or f[0] == " " else "") + (f[1] if f[1] or f[1] == " " else ""): f[2] for f in res}
+    print(addresses)
 
     with open("./{}/{}".format(file_prefix, path), "rb") as file:
         while True:
             try:
-                file = pickle.load(file)
+                f = pickle.load(file)
                 master.append({
-                    'business_id': businesses[file['DEA_No']],
-                    'address_id': addresses[file['street'] + file['street_number']]
+                    'business_id': businesses[f['dea_no']],
+                    'address_id': addresses[(f['street'] + f['street_number'])]
                 })
             except EOFError:
                 break
@@ -46,13 +51,8 @@ def filter_file(path):
         print("Chuncked finished: {}".format(i))
 
 
-    # insert(businesses, db)
-    # addresses = db.select("SELECT * FROM Adress WHERE state = %s AND city = %s AND zip = %s ;".format(names))
-    # print("finished file after {}s".format(round(time.time() - start, 2)))
-
-
 def insert(inserts, db):
-    db.querymany(b_query, inserts)
+    db.querymany(is_located_query, inserts)
 
 
 if __name__ == '__main__':
@@ -66,6 +66,6 @@ if __name__ == '__main__':
     files = [f for f in listdir(file_prefix) if isfile(join(file_prefix, f))]
 
     [filter_file(file) for file in files]
-    db.querymany(b_query, master)
+    db.querymany(is_located_query, master)
 
     print("ended all after {}s".format(round(time.time() - start), 2))

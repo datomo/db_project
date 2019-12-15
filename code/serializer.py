@@ -8,21 +8,19 @@ from pill import Pill
 
 file_path = "../data/arcos_all_washpost.tsv"
 # file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
-file_prefix = "./states"
-business_location = "./business"
+output_folder = "./output"
+output_file = "output"
 
 
-def process_cols(cols):
-    # addresses = {}
-    businesses = {}
-
+def process_cols(cols, i):
+    columns = []
     for col in cols:
         elements = col.replace("\n", "").split('\t')
         positions = [4, 5, 3, 8, 6, 9, 7]
         a_1 = process_address(elements, positions)
         positions = [14, 15, 13, 18, 16, 19, 17]
         a_2 = process_address(elements, positions)
-
+        report = process_report(elements)
         dea = elements[0]
         b_name = elements[2]
         b_1 = process_business(b_name, dea)
@@ -31,57 +29,73 @@ def process_cols(cols):
         b_name = elements[12]
         b_2 = process_business(b_name, dea)
 
-        state_1 = str(a_1["state"]) if a_1["state"] else "#"
-        state_2 = str(a_2["state"]) if a_2["state"] else "#"
-        zip_1 = str(a_1["zip"]) if a_1["zip"] else "#"
-        zip_2 = str(a_2["zip"]) if a_1["zip"] else "#"
-        city_1 = str(a_1["city"]) if a_1["city"] else "#"
-        city_2 = str(a_2["city"]) if a_1["city"] else "#"
+        drug = process_drug(elements, str(elements[22]))
 
-        key_1 = "{}-{}-{}".format(state_1, city_1.replace("/", "##"), zip_1)
-        key_2 = "{}-{}-{}".format(state_2, city_2.replace("/", "##"), zip_2)
-        '''if key_1 not in addresses:
-            addresses[key_1] = []'''
-        if key_1 not in businesses:
-            businesses[key_1] = []
-        '''if key_2 not in addresses:
-            addresses[key_2] = []'''
-        if key_2 not in businesses:
-            businesses[key_2] = []
-
-        # addresses[key_1].append(a_1)
-        # addresses[key_2].append(a_2)
-        b_1.update(a_1)
-        b_2.update(a_2)
-        businesses[key_1].append(b_1)
-        businesses[key_2].append(b_2)
-
-    # save_as_pickle(addresses, file_prefix)
-    save_as_pickle(businesses, business_location)
+        columns.append({'a_1': a_1, 'a_2': a_2, 'b_1': b_1, 'b_2': b_2, 'r': report, 'drug': drug, 'id': i})
+        i += 1
+    save_as_pickle(columns)
 
 
-def save_as_pickle(obj, location):
-    for k in obj:
-        state_file = open(location + "/" + k + ".pkl", "ab+")
-        for address in obj[k]:
-            pickle.dump(address, state_file)
-        state_file.flush()
-        state_file.close()
+def save_as_pickle(cols):
+    state_file = open(output_file + "/" + output_folder + ".pkl", "ab+")
+    for col in cols:
+        pickle.dump(col, state_file)
+    state_file.flush()
+    state_file.close()
+
+
+def process_drug(elements, ndc_id):
+    return replace_null((
+        ndc_id,
+        elements[38],
+        elements[41],
+        elements[31],
+        elements[34],
+        elements[29],
+        elements[21],
+        elements[23],
+        elements[35],
+        elements[37]
+    ))
+
+
+def process_report(elements):
+    return replace_null((
+        elements[33],
+        elements[28],
+        elements[26],
+        elements[20],
+        elements[27],
+        elements[40],
+        elements[30],
+        elements[39],
+        elements[36],
+        elements[25],
+        elements[24],
+        elements[32]
+    ))
+
+
+def replace_null(obj):
+    res = tuple()
+    for v in obj:
+        res += (v,) if v and v != "null" else (None,)
+    return res
 
 
 def process_business(b_name, dea):
-    return {
-        'business_name': b_name,
-        'reviewed_business_id': None,
-        'dea_no': dea
-    }
+    return replace_null((
+        b_name,
+        None,
+        dea
+    ))
 
 
 def process_address(elements, positions):
     add1 = elements[positions[0]]
     add2 = elements[positions[1]]
 
-    (street_name, street_num, additional) = Pill.handle_address(add1, add2)
+    (street_name, street_num, additional) = handle_address(add1, add2)
     if not additional and not elements[positions[2]] or (additional == "null" and additional == "null"):
         additional = None
     elif additional and elements:
@@ -89,18 +103,18 @@ def process_address(elements, positions):
     else:
         additional = additional if additional != "null" and additional else elements[positions[2]]
     # buy_add
-    return {
-        'zip': elements[positions[3]],
-        'city': elements[positions[4]],
-        'street': street_name,
-        'street_number': street_num,
-        'county': elements[positions[5]],
-        'state': elements[positions[6]],
-        'address_name': additional,
-        'longitude': None,
-        'latitude': None,
-        'addl_co_info': additional
-    }
+    return replace_null((
+        elements[positions[3]],
+        elements[positions[4]],
+        street_name,
+        street_num,
+        elements[positions[5]],
+        elements[positions[6]],
+        additional,
+        None,
+        None,
+        additional
+    ))
 
 
 def handle_address(add1, add2) -> (str, str, str):
@@ -138,13 +152,14 @@ def split_address(add) -> (str, str):
         else:
             street += part + " "
 
-    return street.strip(), num.strip()
+        street = street.strip()
+        num = num.strip()
+    return street if street != "" else None, num if num != "" else None
 
 
 if __name__ == '__main__':
-    if os.path.exists(business_location):
-        shutil.rmtree(business_location)
-    os.makedirs(business_location)
+    if os.path.isfile("{}/{}.pkl".format(output_folder, output_file)):
+        os.remove("{}/{}.pkl".format(output_folder, output_file))
 
     with open(file_path, 'r') as file:
         chunk = 2000000
@@ -176,5 +191,5 @@ if __name__ == '__main__':
                 if j >= chunk:
                     break
 
-            process_cols(output)
+            process_cols(output, i - chunk - 1)
             print("finished chunk {} after {}s".format(a_chunk, round(time.time() - start_time, 2)))
