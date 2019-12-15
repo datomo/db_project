@@ -31,7 +31,9 @@ def process_cols(cols, i):
 
         drug = process_drug(elements, str(elements[22]))
 
-        columns.append({'a_1': a_1, 'a_2': a_2, 'b_1': b_1, 'b_2': b_2, 'r': report, 'drug': drug, 'id': i})
+        columns.append(
+            {'a_1': a_1, 'a_2': a_2, 'b_1': b_1, 'r_1': elements[1], 'b_2': b_2, 'r_2': elements[11], 'r': report,
+             'drug': drug, 'id': i})
         i += 1
     save_as_pickle(columns)
 

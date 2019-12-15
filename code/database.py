@@ -71,7 +71,7 @@ class Database:
     def select(self, query):
         self.cursor.execute(query)
         fetch = self.cursor.fetchall()
-        print(self.cursor.fetchwarnings())
+        # print(self.cursor.fetchwarnings())
         return fetch
 
     def select_one(self, query):
@@ -98,6 +98,10 @@ class Database:
         self.buffered_cursor.close()
         self.db.close()
         # self.tunnel.stop()
+
+    def load_infile(self, file_path, table):
+        self.query("LOAD DATA LOCAL INFILE '{}' INTO TABLE {} "
+                 "FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n'".format(file_path, table))
 
 
 '''def main():

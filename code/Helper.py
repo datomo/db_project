@@ -144,4 +144,13 @@ class Helper:
     def tuplelist_to_listlist(tuplelist) -> [[]]:
         return [list(el) for el in tuplelist]
 
+    @staticmethod
+    def parse_tuplelist_to_dict(tuplelist):
+        return {"".join([str(b) for b in a[:-1]]).replace(" ", ""): a[-1] for a in tuplelist}
 
+    @staticmethod
+    def append_to_csv(data, csv_path):
+        with open(csv_path, "a+") as file:
+            file.truncate()
+            for item in data:
+                file.write("|".join([str(i).replace("|", "") for i in item]) + "\n")
