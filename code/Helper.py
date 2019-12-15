@@ -3,6 +3,7 @@ import os
 import pickle
 import shutil
 import time
+from collections import OrderedDict
 from os.path import isfile, join
 from typing import Callable
 
@@ -29,6 +30,7 @@ class Helper:
         start = time.time()
         chunk = []
         i = 0
+        j = 0
         with open(input_file, "rb") as file:
             while True:
                 try:
@@ -39,9 +41,10 @@ class Helper:
                 i += 1
                 if i >= chunk_size:
                     f(chunk)
+                    j += 1
                     i = 0
                     chunk = []
-                    logging.debug("finished file {} after {}s".format(i, round(time.time() - start, 2)))
+                    logging.debug("finished file {} after {}s".format(j, round(time.time() - start, 2)))
                     start = time.time()
 
     @staticmethod
@@ -89,7 +92,7 @@ class Helper:
         return list(dict.fromkeys(a_list))
 
     @staticmethod
-    def filter_file(file_name, path, filter_folder="filtered"):
+    def filter_file(file_name, path, filter_folder="filtered", filter_pos=None):
         logging.debug("starting filtering file")
         content_set = set()
         with open("./{}/{}".format(path, file_name), "rb") as file:
@@ -98,6 +101,11 @@ class Helper:
                     content_set.add(pickle.load(file))
                 except EOFError:
                     break
+
+        if filter_pos is not None:
+            keys = set()
+            content_set = [t for t in content_set
+                           if not (t[filter_pos] in keys or keys.add(t[filter_pos]))]
 
         target_folder = path + "/" + filter_folder
         Helper.write_list(list(content_set), target_folder, file_name)
