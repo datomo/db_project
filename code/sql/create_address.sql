@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS Address (
     id INTEGER auto_increment,
-    zip INTEGER,
+    zip VARCHAR(14),
     city VARCHAR(255),
     street VARCHAR(255),
     street_number VARCHAR(255),

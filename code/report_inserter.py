@@ -6,13 +6,14 @@ from database import Database
 
 logging.basicConfig(level=logging.DEBUG)
 
+
 class ReportInserter:
     r_query = "INSERT INTO Report (transaction_id, correction_no, action_indicator,transaction_code,order_from_no,reporter_family,transaction_date,revised_company_name,measure,unit,quantity,dosage_unit) VALUES (" \
               "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
     target_folder = "./output/relations/{}"
     iterations = 0
-    parse_txt = True
+    parse_txt = False
 
     def __init__(self):
         self.db = Database()
@@ -25,7 +26,7 @@ class ReportInserter:
         Helper.create_tables("./sql/create_specifies.sql", self.db)
         Helper.create_tables("./sql/create_reports.sql", self.db)
 
-        # reparse csv files
+        # reparse txt files
         if self.parse_txt:
             self.addresses = self.db.select("SELECT street, street_number, zip, state, id FROM Address;")
             self.addresses = Helper.parse_tuplelist_to_dict(self.addresses)

@@ -172,7 +172,8 @@ if __name__ == '__main__':
         chunk_amount = math.ceil(float(lines) / chunk)
         print("{}".format(chunk_amount))
 
-        i = 0
+        # id cant be 0 needs to start at 1
+        i = 1
 
         start_time = time.time()
 

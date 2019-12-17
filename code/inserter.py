@@ -60,7 +60,10 @@ class Inserter:
             Helper.get_files_in_folder(self.drug_folder),
             self.drug_folder)
 
-        self.db.querymany(self.d_query, Helper.tuplelist_to_listlist(drug))
+        drug = Helper.tuplelist_to_listlist(drug)
+        # wrong value
+        drug.pop(3985)
+        self.db.querymany(self.d_query, drug)
         logging.debug("Finished inserting drug")
 
 
