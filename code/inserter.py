@@ -62,7 +62,7 @@ class Inserter:
 
         drug = Helper.tuplelist_to_listlist(drug)
         # wrong value
-        drug.pop(3985)
+        # drug.pop(3985)
         self.db.querymany(self.d_query, drug)
         logging.debug("Finished inserting drug")
 

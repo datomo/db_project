@@ -11,9 +11,11 @@ class ReportInserter:
     r_query = "INSERT INTO Report (transaction_id, correction_no, action_indicator,transaction_code,order_from_no,reporter_family,transaction_date,revised_company_name,measure,unit,quantity,dosage_unit) VALUES (" \
               "%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
+    s_query = "INSERT INTO specifies VALUES (%s, %s)"
+
     target_folder = "./output/relations/{}"
     iterations = 0
-    parse_txt = False
+    parse_txt = True
 
     def __init__(self):
         self.db = Database()
@@ -48,7 +50,7 @@ class ReportInserter:
         self.db.load_infile(self.target_folder.format("reports.txt"), "reports")
         logging.debug("finished loading reports csv after {}s".format(round(time.time() - self.start), 2))
 
-        self.db.load_infile(self.target_folder.format("specifies.txt"), "specifies")
+        #self.db.load_infile(self.target_folder.format("specifies.txt"), "specifies")
         logging.debug("finished loading all csv after {}s".format(round(time.time() - self.start), 2))
 
     def parse_cols(self, cols):
@@ -73,7 +75,8 @@ class ReportInserter:
 
         Helper.append_to_csv(reports, self.target_folder.format("report.txt"))
         Helper.append_to_csv(reports_rel, self.target_folder.format("reports.txt"))
-        Helper.append_to_csv(specifies, self.target_folder.format("specifies.txt"))
+        # Helper.append_to_csv_special(specifies, self.target_folder.format("specifies.txt"))
+        self.db.querymany(self.s_query, specifies)
 
         logging.debug("Finished chunk {} in {}s".format(self.iterations, round(time.time() - self.time, 2)))
         self.time = time.time()

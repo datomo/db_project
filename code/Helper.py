@@ -14,11 +14,14 @@ from database import Database
 class Helper:
 
     @staticmethod
-    def generate_key(keys: tuple(), delimiter="-", replace_char="") -> str:
+    def generate_key(keys: tuple(), delimiter="-", replace_char="", remove_whitespace=False) -> str:
         parsed = []
         for key in keys:
             parsed.append(str(key) if key else replace_char)
+        if remove_whitespace:
+            parsed = [f.replace(" ", "") for f in parsed]
         return delimiter.join(parsed)
+
 
     @staticmethod
     def chunk_file_pkl(chunk_size, input_file, f: Callable):
@@ -31,8 +34,10 @@ class Helper:
         chunk = []
         i = 0
         j = 0
+        executed = False
         with open(input_file, "rb") as file:
             while True:
+                executed = False
                 try:
                     chunk.append(pickle.load(file))
 
@@ -41,11 +46,35 @@ class Helper:
                 i += 1
                 if i >= chunk_size:
                     f(chunk)
+                    executed = True
                     j += 1
                     i = 0
                     chunk = []
-                    logging.debug("finished file {} after {}s".format(j, round(time.time() - start, 2)))
-                    start = time.time()
+        if not executed:
+            f(chunk)
+            logging.debug("finished file {} after {}s".format(j, round(time.time() - start, 2)))
+            start = time.time()
+
+    @staticmethod
+    def chunk_file(input_file, f: Callable):
+        """
+        :param chunk_size: size of each chunk
+        :param input_file: the source file path
+        :param f: function which is applied after each chunk is created
+        """
+        start = time.time()
+        chunk = []
+        i = 0
+        chunk = set()
+        with open(input_file, "rb") as file:
+            for line in file:
+                i += 1
+                chunk.add(line)
+            f(list(chunk))
+
+            i = 0
+
+            logging.debug("finished file after {}s".format(round(time.time() - start, 2)))
 
     @staticmethod
     def clear_folder(folder):
@@ -154,3 +183,10 @@ class Helper:
             file.truncate()
             for item in data:
                 file.write("|".join([str(i).replace("|", "") for i in item]) + "\n")
+
+    @staticmethod
+    def append_to_csv_special(data, csv_path):
+        with open(csv_path, "a+") as file:
+            file.truncate()
+            for item in data:
+                file.write("|".join(["\"" + str(i) + "\"".replace("|", "") for i in item]) + "\n")

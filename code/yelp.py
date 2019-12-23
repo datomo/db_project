@@ -136,7 +136,7 @@ class Yelp:
     def get_addresses(db: Database, codes):
         res = db.select("SELECT zip, street, id FROM Address WHERE zip IN ({})".format(str(codes)[1:-1]))
         global parsed_addresses
-        parsed_addresses = dict([(str(x[0]) + x[1], x[2]) for x in res])
+        parsed_addresses = dict([((str(x[0]) if x[0] else "") + (x[1] if x[1] else ""), x[2]) for x in res])
 
     @staticmethod
     def get_businesses(db: Database, names):
@@ -265,3 +265,9 @@ class Yelp:
 if __name__ == '__main__':
     db = Database()
     Yelp.add_data(db)'''
+
+def main():
+    db = Database()
+    Yelp.add_data_business(db)
+
+main()

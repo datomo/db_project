@@ -173,7 +173,7 @@ if __name__ == '__main__':
         print("{}".format(chunk_amount))
 
         # id cant be 0 needs to start at 1
-        i = 1
+        i = 0
 
         start_time = time.time()
 
@@ -194,5 +194,5 @@ if __name__ == '__main__':
                 if j >= chunk:
                     break
 
-            process_cols(output, i - chunk - 1)
+            process_cols(output, i - chunk)
             print("finished chunk {} after {}s".format(a_chunk, round(time.time() - start_time, 2)))
