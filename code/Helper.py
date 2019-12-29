@@ -178,8 +178,8 @@ class Helper:
         return {"".join([str(b) for b in a[:-1]]).replace(" ", ""): a[-1] for a in tuplelist}
 
     @staticmethod
-    def append_to_csv(data, csv_path):
-        with open(csv_path, "a+") as file:
+    def append_to_csv(data, csv_path, encoding=None):
+        with open(csv_path, "a+", encoding=encoding) as file:
             file.truncate()
             for item in data:
                 file.write("|".join([str(i).replace("|", "") for i in item]) + "\n")
