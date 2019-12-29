@@ -4,17 +4,17 @@ from database import Database
 
 class Yelp_Address:
     file_name = "./output/yelp/yelp.pkl"
-    a_query = "INSERT IGNORE INTO Address(zip,city,street,street_number,county,state,address_name,longitude,latitude,addl_co_info) VALUES(" \
-              "%(zip)s, " \
-              "%(city)s, " \
-              "%(street)s, " \
-              "%(street_number)s, " \
-              "%(county)s, " \
-              "%(state)s, " \
-              "%(address_name)s, " \
-              "%(longitude)s, " \
-              "%(latitude)s, " \
-              "%(addl_co_info)s)"
+    a_query = "INSERT INTO Address(zip,city,street,street_number,county,state,address_name,longitude,latitude,addl_co_info) VALUES(" \
+              "%s, " \
+              "%s, " \
+              "%s, " \
+              "%s, " \
+              "%s, " \
+              "%s, " \
+              "%s, " \
+              "%s, " \
+              "%s, " \
+              "%s)"
 
     def __init__(self):
         self.db = Database()
@@ -24,7 +24,7 @@ class Yelp_Address:
     def parse_cols(self, cols):
 
         self.get_address_ids()
-        a_data = []
+        a_data = set()
 
         for col in cols:
             # print(col)
@@ -33,24 +33,24 @@ class Yelp_Address:
             print(street)
             print(street_number)
 
-            key = Helper.generate_key([street, street_number, col["zip"], col["state"]], delimiter="", remove_whitespace=True,
+            key = Helper.generate_key([street, street_number, col["postal_code"], col["state"]], delimiter="", remove_whitespace=True,
                                         replace_char="None")
 
             if key not in self.addresses:
-                a_data.append({
-                    'zip': col["postal_code"],
-                    'city': col["city"],
-                    'street': street,
-                    'street_number': street_number,
-                    'county': None,
-                    'state': col["state"],
-                    'address_name': None,
-                    'longitude': col['longitude'],
-                    'latitude': col['latitude'],
-                    'addl_co_info': None
-                })
-
-            self.db.querymany(self.a_query, a_data)
+                a_data.add((
+                    col["postal_code"],
+                    col["city"],
+                    street,
+                    street_number,
+                    None,
+                    col["state"],
+                    None,
+                    col['longitude'],
+                    col['latitude'],
+                    None
+                ))
+        print("hallo isablyt")
+        self.db.querymany(self.a_query, list(a_data))
 
 
 
@@ -58,7 +58,7 @@ class Yelp_Address:
         splits = street.split()
 
         street = []
-        number =  []
+        number = []
 
 
         for split in splits:

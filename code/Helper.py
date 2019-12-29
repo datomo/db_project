@@ -24,7 +24,7 @@ class Helper:
 
 
     @staticmethod
-    def chunk_file_pkl(chunk_size, input_file, f: Callable):
+    def chunk_file_pkl(chunk_size, input_file, f: Callable, encoding=None):
         """
         :param chunk_size: size of each chunk
         :param input_file: the source file path
@@ -39,7 +39,7 @@ class Helper:
             while True:
                 executed = False
                 try:
-                    chunk.append(pickle.load(file))
+                    chunk.append(pickle.load(file, encoding=encoding if encoding else ""))
 
                 except EOFError:
                     break

@@ -1,9 +1,9 @@
 import db_parser
-from crime import Crime
+from old.crime import Crime
 from database import Database
-from pill import Pill
-from pill_relations import Pill_relations
-from yelp import Yelp
+from old.pill import Pill
+from old.pill_relations import Pill_relations
+from old.yelp import Yelp
 
 drop_tables = True
 initalize_tables = True

@@ -1,10 +1,9 @@
 import math
 import os
 import pickle
-import shutil
 import time
 
-from pill import Pill
+from old.pill import Pill
 
 file_path = "../data/arcos_all_washpost.tsv"
 # file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
