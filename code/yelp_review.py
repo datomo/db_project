@@ -19,6 +19,10 @@ class Yelp_Review:
               "%s)"
 
     def __init__(self):
+
+        self.db.drop_table("review")
+        Helper.create_tables("./sql/create_review.sql", self.db)
+
         self.db = Database()
         i = 0
         chunk = 20000

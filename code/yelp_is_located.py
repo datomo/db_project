@@ -14,6 +14,9 @@ class Yelp_Is_Located:
     def __init__(self):
             self.db = Database()
 
+            self.db.drop_table("is_located")
+            Helper.create_tables("./sql/create_is_located.sql", self.db)
+
             Helper.chunk_file_pkl(2000000, self.file_name, self.parse_cols)
 
     def parse_cols(self, cols):
