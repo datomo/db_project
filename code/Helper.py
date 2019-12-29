@@ -190,3 +190,21 @@ class Helper:
             file.truncate()
             for item in data:
                 file.write("|".join(["\"" + str(i) + "\"".replace("|", "") for i in item]) + "\n")
+
+    @staticmethod
+    def parse_yelp_street( street):
+        splits = street.split()
+
+        street = []
+        number = []
+
+
+        for split in splits:
+            if(split.isdigit()):
+                number.append(split)
+            elif(len(split) <= 1):
+                number.append(split)
+            else:
+                street.append("Street" if split == "St" else split)
+
+        return " ".join(street) if number != "" else None, " ".join(number) if number != "" else None

@@ -28,7 +28,7 @@ class Yelp_Address:
 
         for col in cols:
             # print(col)
-            street, street_number = self.parse_street(col["address"])
+            street, street_number = Helper.parse_yelp_street(col["address"])
 
             print(street)
             print(street_number)
@@ -49,27 +49,11 @@ class Yelp_Address:
                     col['latitude'],
                     None
                 ))
-        print("hallo isablyt")
         self.db.querymany(self.a_query, list(a_data))
 
 
 
-    def parse_street(self, street):
-        splits = street.split()
 
-        street = []
-        number = []
-
-
-        for split in splits:
-            if(split.isdigit()):
-                number.append(split)
-            elif(len(split) <= 1):
-                number.append(split)
-            else:
-                street.append("Street" if split == "St" else split)
-
-        return " ".join(street) if number != "" else None, " ".join(number) if number != "" else None
 
 
     def get_address_ids(self):

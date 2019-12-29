@@ -7,6 +7,6 @@ CREATE TABLE Review(
   cool INTEGER,
   funny INTEGER,
   useful INTEGER,
-  stars INTEGER,
+  stars FLOAT,
   PRIMARY KEY (review_id)
 );

@@ -9,7 +9,7 @@ from database import Database
 class Yelp:
     @staticmethod
     def add_data(db: Database):
-        queries = db_parser.transform_sql("./sql/create_tables_review.sql")
+        queries = db_parser.transform_sql("./sql/create_review.sql")
         db.query_all(queries)
         db.query("ALTER TABLE Review CHANGE text text TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")
 

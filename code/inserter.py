@@ -14,7 +14,7 @@ class Inserter:
               "zip, city, street, street_number, county, state, address_name, longitude, latitude, addl_co_info) VALUES(" \
               "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-    b_query = "INSERT INTO Business(business_name, reviewed_business_id, dea_no) VALUES(%s, %s, %s)"
+    b_query = "INSERT INTO Business(business_name, dea_no) VALUES(%s, %s)"
 
     d_query = "INSERT INTO Drug(" \
               "ndc_no, " \
