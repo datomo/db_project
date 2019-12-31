@@ -103,6 +103,11 @@ class Database:
         self.query("LOAD DATA LOCAL INFILE '{}' INTO TABLE {} "
                  "FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n'".format(file_path, table))
 
+    def load_infile_utf8(self, file_path, table):
+        self.query("LOAD DATA LOCAL INFILE '{}' INTO TABLE {} "
+                   "CHARACTER SET UTF8 "
+                 "FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n'".format(file_path, table))
+
 
 '''def main():
     db = Database()

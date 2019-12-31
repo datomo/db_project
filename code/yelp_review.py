@@ -38,7 +38,7 @@ class Yelp_Review:
                     output = []
                     i = 0
             self.parse_cols(output)
-        self.db.load_infile("./output/yelp/review.txt", "Review")
+        self.db.load_infile_utf8("./output/yelp/review.txt", "Review")
 
     def parse_cols(self, output):
         print('starting chunk {}'.format(self.j))
