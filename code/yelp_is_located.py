@@ -2,7 +2,7 @@ from Helper import Helper
 from database import Database
 
 
-class Yelp_Is_Located:
+class YelpRatesA:
     file_name = "./output/yelp/yelp.pkl"
     a_query = "INSERT INTO is_located(address_id, business_id, reviewed_business_id) VALUES(" \
               "%s, " \
@@ -13,11 +13,12 @@ class Yelp_Is_Located:
 
     def __init__(self):
         self.db = Database()
+        self.i = 0
 
         self.db.drop_table("is_located")
         Helper.create_tables("./sql/create_is_located.sql", self.db)
 
-        Helper.chunk_file_pkl(2000000, self.file_name, self.parse_cols)
+        Helper.chunk_file_pkl(200000, self.file_name, self.parse_cols)
 
     def parse_cols(self, cols):
 
@@ -45,11 +46,17 @@ class Yelp_Is_Located:
             else:
                 i_o_data.add((
                     col['business_id'],
-                    self.is_located[str(a_id)+str(b_id)]
+                    self.is_located[str(a_id) + str(b_id)]
                 ))
 
-        self.db.querymany(self.a_query, list(i_data))
-        self.db.querymany(self.update_query, list(i_o_data))
+
+        error = self.db.querymany(self.a_query, list(i_data))
+        if error:
+            print("error on line {}".format(self.i))
+        print("finished chunk {}".format(self.i))
+        self.i += 1
+
+        # self.db.querymany(self.update_query, list(i_o_data))
 
 
     def get_existing_data(self):
@@ -63,6 +70,6 @@ class Yelp_Is_Located:
         self.is_located = Helper.parse_tuplelist_to_dict(self.is_located)
 
 def main():
-    y = Yelp_Is_Located()
+    y = YelpRatesA()
 
 main()

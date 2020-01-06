@@ -22,11 +22,11 @@ class Yelp_Review:
         self.db = Database()
         self.db.drop_table("review")
         Helper.create_tables("./sql/create_review.sql", self.db)
-
+        print("finished clearing")
 
         i = 0
         self.j = 0
-        chunk = 200000
+        chunk = 1000000
         output = []
         with open(self.file_path, encoding="utf8", mode="r") as file:
             for line in file:
@@ -35,10 +35,11 @@ class Yelp_Review:
                 i += 1
                 if i > chunk:
                     self.parse_cols(output)
+
                     output = []
                     i = 0
             self.parse_cols(output)
-        self.db.load_infile_utf8("./output/yelp/review.txt", "Review")
+        self.db.load_infile_enclosed("./output/yelp/review.txt", "Review")
 
     def parse_cols(self, output):
         print('starting chunk {}'.format(self.j))
@@ -49,14 +50,14 @@ class Yelp_Review:
                 col['user_id'],
                 col['business_id'],
                 col['date'],
-                col['text'],
+                col['text'].replace("\\\"", "'").replace("\"", "'").replace("\n", "").replace("\r", ""),
                 col['cool'],
                 col['funny'],
                 col['useful'],
                 col['stars']
             ))
 
-        Helper.append_to_csv(y_data, "./output/yelp/review.txt", "utf8")
+        Helper.append_to_csv_special(y_data, "./output/yelp/review.txt", encoding="utf8", terminate="\r\n")
 
         # self.db.querymany(self.r_query, y_data)
         self.j += 1

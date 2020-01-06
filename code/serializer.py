@@ -87,7 +87,6 @@ def replace_null(obj):
 def process_business(b_name, dea):
     return replace_null((
         b_name,
-        None,
         dea
     ))
 

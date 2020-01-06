@@ -83,6 +83,11 @@ class Helper:
         os.makedirs(folder)
 
     @staticmethod
+    def create_folder(folder):
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+
+    @staticmethod
     def write_list(dicts, target_folder, target_file, remove_duplicates=False):
         if remove_duplicates:
             dicts = Helper.uniquify_list(dicts)
@@ -170,6 +175,13 @@ class Helper:
         db.query_all(queries)
 
     @staticmethod
+    def execute_sql_file(sql_path: str, db: Database):
+        queries = db_parser.transform_sql(sql_path)
+        if len(queries) > 1:
+            return
+        return db.select()
+
+    @staticmethod
     def tuplelist_to_listlist(tuplelist) -> [[]]:
         return [list(el) for el in tuplelist]
 
@@ -185,11 +197,11 @@ class Helper:
                 file.write("|".join([str(i).replace("|", "") for i in item]) + "\n")
 
     @staticmethod
-    def append_to_csv_special(data, csv_path):
-        with open(csv_path, "a+") as file:
+    def append_to_csv_special(data, csv_path, encoding=None, terminate="\n"):
+        with open(csv_path, "a+", encoding=encoding) as file:
             file.truncate()
             for item in data:
-                file.write("|".join(["\"" + str(i) + "\"".replace("|", "") for i in item]) + "\n")
+                file.write("|".join(["\"" + str(i) + "\"".replace("|", "") for i in item]) + terminate)
 
     @staticmethod
     def parse_yelp_street( street):
