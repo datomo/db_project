@@ -5,8 +5,8 @@ import time
 
 from old.pill import Pill
 
-file_path = "../data/arcos_all_washpost.tsv"
-# file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
+# file_path = "../data/arcos_all_washpost.tsv"
+file_path = "../data/arcos-az-maricopa-04013-itemized.tsv"
 output_folder = "./output"
 output_file = "output"
 
@@ -163,8 +163,8 @@ if __name__ == '__main__':
 
     with open(file_path, 'r') as file:
         chunk = 2000000
-        # lines = sum(1 for i in open(file_path, 'rb'))
-        lines = 178598027
+        lines = sum(1 for i in open(file_path, 'rb'))
+        # lines = 178598027
         print("number of columns: {}".format(lines))
 
         chunk_amount = math.ceil(float(lines) / chunk)

@@ -10,11 +10,11 @@ class Inserter:
     target_folder = "./output/{}/filtered"
     db = Database()
 
-    a_query = "INSERT INTO Address(" \
+    a_query = "INSERT IGNORE INTO Address(" \
               "zip, city, street, street_number, county, state, address_name, longitude, latitude, addl_co_info) VALUES(" \
               "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-    b_query = "INSERT INTO Business(business_name, dea_no) VALUES(%s, %s)"
+    b_query = "INSERT IGNORE INTO Business(business_name, dea_no) VALUES(%s, %s)"
 
     d_query = "INSERT INTO Drug(" \
               "ndc_no, " \
@@ -33,9 +33,9 @@ class Inserter:
         self.business_folder = self.target_folder.format("businesses")
         self.drug_folder = self.target_folder.format("drug")
 
-        self.db.drop_table("is_located")
-        self.db.drop_table("address")
-        self.db.drop_table("business")
+        # self.db.drop_table("is_located")
+        # self.db.drop_table("address")
+        # self.db.drop_table("business")
 
         Helper.create_tables("./sql/create_address.sql", self.db)
         Helper.create_tables("./sql/create_business.sql", self.db)
@@ -63,7 +63,7 @@ class Inserter:
         drug = Helper.tuplelist_to_listlist(drug)
         # wrong value
         # drug.pop(3985)
-        self.db.querymany(self.d_query, drug)
+        # self.db.querymany(self.d_query, drug)
         logging.debug("Finished inserting drug")
 
 
