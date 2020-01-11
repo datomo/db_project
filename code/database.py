@@ -1,5 +1,4 @@
 import mysql.connector
-from sshtunnel import SSHTunnelForwarder
 
 # ssh variables
 host = '134.209.234.163'
@@ -10,7 +9,7 @@ ssh_password = 'db_project2019'
 # database variables
 user = 'root'
 password = 'd7730e905d7c2a007371051d2060cc8d9de4ba9230e7bfc8'
-database = 'db_project'
+database = 'db_multiprocess'
 
 
 class Database:
@@ -19,7 +18,9 @@ class Database:
         self.cursor = self.db.cursor()
         self.query("SET GLOBAL max_allowed_packet=1073741824")
         self.query("SET autocommit = 0")
-        self.query("SET FOREIGN_KEY_CHECKS=0;")
+        self.query("SET GLOBAL local_infile = true")
+        self.query("SET GLOBAL innodb_buffer_pool_size=12884895290")
+        # self.query("SET FOREIGN_KEY_CHECKS=0;")
         self.buffered_cursor = self.db.cursor(buffered=True)
 
     def open_connection(self):
@@ -52,13 +53,14 @@ class Database:
             print("Something went wrong: {}".format(e))
             print(query)
 
-    def querymany(self, query, data_list):
+    def querymany(self, query, data_list) -> str:
         try:
             self.cursor.executemany(query, data_list)
             self.db.commit()
         except mysql.connector.Error as e:
             print("Something went wrong: {}".format(e))
             print(query)
+            return "error"
 
     def exists(self, table, statments):
         query = "SELECT (1) FROM {} WHERE {}".format(table, " AND ".join(statments))
@@ -71,6 +73,7 @@ class Database:
     def select(self, query):
         self.cursor.execute(query)
         fetch = self.cursor.fetchall()
+        # print(self.cursor.fetchwarnings())
         return fetch
 
     def select_one(self, query):
@@ -97,6 +100,19 @@ class Database:
         self.buffered_cursor.close()
         self.db.close()
         # self.tunnel.stop()
+
+    def load_infile(self, file_path, table):
+        self.query("LOAD DATA LOCAL INFILE '{}' INTO TABLE {} "
+                   "FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n'".format(file_path, table))
+
+    def load_infile_utf8(self, file_path, table):
+        self.query("LOAD DATA LOCAL INFILE '{}' INTO TABLE {} "
+                   "CHARACTER SET UTF8 "
+                   "FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n'".format(file_path, table))
+
+    def load_infile_enclosed(self, file_path, table):
+        self.query("LOAD DATA LOCAL INFILE '{}' INTO TABLE {} "
+                   "FIELDS TERMINATED BY '|' ENCLOSED BY '\"' LINES TERMINATED BY '\r\n'".format(file_path, table))
 
 
 '''def main():

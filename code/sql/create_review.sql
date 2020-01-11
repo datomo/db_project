@@ -7,6 +7,7 @@ CREATE TABLE Review(
   cool INTEGER,
   funny INTEGER,
   useful INTEGER,
-  stars INTEGER,
-  PRIMARY KEY (review_id)
+  stars FLOAT,
+  PRIMARY KEY (review_id),
+  FOREIGN KEY (business_id) REFERENCES is_located(reviewed_business_id)
 );

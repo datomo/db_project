@@ -23,8 +23,7 @@ CREATE TABLE Drug(
   drug_name VARCHAR(255),
   ingredient_name VARCHAR(255), 
   mme_conversion_factor INTEGER,
-  PRIMARY KEY (ndc_no),
-  INDEX(ndc_no)
+  PRIMARY KEY (ndc_no)
 );
 
 CREATE TABLE Report(
