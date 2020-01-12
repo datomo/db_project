@@ -3,7 +3,8 @@
       <db-triple-map :zip_1="crime"
                      :zip_2="pill"
                      :zip_3="review"
-                     title="Crime & Pill & Review"
+                     title="Crime & Pill & Review (worst)"
+                     :flip="[false, false, true]"
                      low_color="rgb(255, 255, 83)"
                      high_color="rgb(0, 0, 83)"/>
     </div>

@@ -2,12 +2,13 @@
   <div class="w-auto h-auto flex flex p-3">
     <div class="mx-auto inline-block w-auto mr-2">
       <div class=" shadow-md bg-white rounded p-2 ">
+        <h3 class="font-semibold">Controls</h3>
         <div class="flex items-center">
-          <label class="pr-2" for="showZips">Show Zips</label>
+          <label class="pr-2" for="showZips">Postel Codes</label>
           <input id="showZips" type="checkbox" v-model="showZips">
         </div>
-        <div class="flex items-center justify-center">
-          <label class="pr-2" for="showZips">Show Values</label>
+        <div class="flex items-center">
+          <label class="pr-2" for="showZips">Values</label>
           <input id="showPercent" type="checkbox" v-model="showPercent">
         </div>
         <button class="border rounded p-1 my-1 shadow-md" @click="el.reset()">reset</button>
@@ -16,16 +17,16 @@
         <p class="font-semibold">{{scala}}</p>
         <p>lowest</p>
         <svg width="100" height="100">
-          <linearGradient :id="'gradient' + title.replace(/ /g, '').replace(/&/g, '')" x1="0%" y1="0%" x2="0%" y2="100%">
+          <linearGradient :id="'gradient' + this.clean(title)" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" :style="{stopColor: low_color}"/>
             <stop offset="100%" :style="{stopColor: high_color}"/>
           </linearGradient>
-          <path d="M 10 10 H 90 V 90 H 10 L 10 10" :fill="'url(#gradient' + title.replace(/ /g, '').replace(/&/g, '') + ')'"/>
+          <path d="M 10 10 H 90 V 90 H 10 L 10 10" :fill="'url(#gradient' + this.clean(title) + ')'"/>
         </svg>
         <p>highest</p>
       </div>
       <div class="shadow-md bg-white rounded mt-4 p-2 flex flex-col justify-center items-center">
-        <p class="pb-2 font-bold">No Data</p>
+        <p class="pb-2 font-semibold">No Data</p>
         <svg width="50" height="50">
           <rect height="50" width="50" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)" />
         </svg>
@@ -34,7 +35,7 @@
     <div class="shadow-md bg-white rounded">
       <h1 class="text-center pt-4 font-semibold">{{title}}</h1>
       <div ref="parent">
-        <div :id="'map-' + title.replace(/ /g, '').replace(/&/g, '')" class="svg-container overflow-hidden overflow-hidden">
+        <div :id="'map-' + this.clean(title)" class="svg-container overflow-hidden overflow-hidden">
           <svg class="w-full pb-8 p-8 h-full flex-0"  xmlns="http://www.w3.org/2000/svg"
                viewBox="0 0 291 725.3">
             <title>{{title.replace(/ /g, '').replace(/&/g, '')}}</title>
@@ -258,13 +259,12 @@ export default {
       deep: true,
       immediate: true,
       handler () {
-        console.log('hai')
         this.evaluteZips()
       }
     }
   },
   mounted () {
-    this.el = Panzoom(document.querySelector('#map-' + this.title.replace(/ /g, '').replace(/&/g, '')))
+    this.el = Panzoom(document.querySelector('#map-' + this.clean(this.title)))
     this.evaluteZips()
     // ugly panzoom fix
     const el = this.el
@@ -284,6 +284,9 @@ export default {
           this.$refs['percent_' + zip].textContent = Number(this.zips[zip]).toFixed(2)
         }
       }
+    },
+    clean (input) {
+      return input.replace(/ /g, '').replace(/[^a-zA-Z ]/g, '')
     }
   },
   computed: {

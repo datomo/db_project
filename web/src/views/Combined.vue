@@ -2,7 +2,8 @@
   <div class="combined h-auto w-full flex items-center justify-around">
     <db-combined-map :zip_1="crime"
                      :zip_2="review"
-                     title="Crime & Reviews"
+                     title="Crime & Reviews (worst)"
+                     :flip="[false, true]"
                      low_color="rgb(255, 255, 83)"
                      high_color="rgb(0, 0, 83)"/>
     <db-combined-map :zip_1="crime" :zip_2="pill"
@@ -12,7 +13,8 @@
                      scala="Conformity"/>
     <db-combined-map :zip_1="review"
                      :zip_2="pill"
-                     title="Review & Pill"
+                     :flip="[true, false]"
+                     title="Review (worst) & Pill"
                      low_color="rgb(255, 255, 83)"
                      high_color="rgb(0, 0, 83)"
                      scala="Conformity"/>
