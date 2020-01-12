@@ -19,6 +19,7 @@
         <svg width="100" height="100">
           <linearGradient :id="'gradient' + this.clean(title)" x1="0%" y1="0%" x2="0%" y2="100%">
             <stop offset="0%" :style="{stopColor: low_color}"/>
+            <stop offset="50%" :style="{stopColor: colorBetweenWrapper(low_color, high_color, 0.5)}"/>
             <stop offset="100%" :style="{stopColor: high_color}"/>
           </linearGradient>
           <path d="M 10 10 H 90 V 90 H 10 L 10 10" :fill="'url(#gradient' + this.clean(title) + ')'"/>
@@ -28,15 +29,16 @@
       <div class="shadow-md bg-white rounded mt-4 p-2 flex flex-col justify-center items-center">
         <p class="pb-2 font-semibold">No Data</p>
         <svg width="50" height="50">
-          <rect height="50" width="50" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)" />
+          <rect height="50" width="50" style="fill:rgb(255,255,255);stroke-width:1;stroke:rgb(0,0,0)"/>
         </svg>
       </div>
     </div>
     <div class="shadow-md bg-white rounded">
       <h1 class="text-center pt-4 font-semibold">{{title}}</h1>
+      <h2 class="text-center pt-4 font-semibold" v-if="subtitle">{{subtitle}}</h2>
       <div ref="parent">
         <div :id="'map-' + this.clean(title)" class="svg-container overflow-hidden overflow-hidden">
-          <svg class="w-full pb-8 p-8 h-full flex-0"  xmlns="http://www.w3.org/2000/svg"
+          <svg class="w-full pb-8 p-8 h-full flex-0" xmlns="http://www.w3.org/2000/svg"
                viewBox="0 0 291 725.3">
             <title>{{title.replace(/ /g, '').replace(/&/g, '')}}</title>
             <g ref="Layer_1" data-name="Layer 1">
@@ -233,12 +235,14 @@ const colorBetween = require('color-between')
 export default {
   name: 'Map',
   props: {
+    subtitle: {},
     zips: {},
     low_color: {},
     high_color: {},
     title: {},
     population: {},
     ratio: {},
+    zip_values: {},
     text_color: {
       title: '',
       default: 'white'
@@ -280,18 +284,23 @@ export default {
           this.$refs['_' + zip].style.fill = colorBetween(this.low_color, this.high_color, this.zips[zip])
           // assign Percent
         }
+        let value = this.zips[zip]
+        if (this.zip_values) {
+          value = this.zip_values[zip]
+        }
         if (this.$refs.hasOwnProperty('percent_' + zip)) {
-          this.$refs['percent_' + zip].textContent = Number(this.zips[zip]).toFixed(2)
+          this.$refs['percent_' + zip].textContent = Number(value).toFixed(2)
         }
       }
+    },
+    colorBetweenWrapper (color1, color2, percent) {
+      return colorBetween(color1, color2, percent)
     },
     clean (input) {
       return input.replace(/ /g, '').replace(/[^a-zA-Z ]/g, '')
     }
   },
-  computed: {
-
-  }
+  computed: {}
 }
 </script>
 

@@ -6,21 +6,21 @@
             :population="this.population"
             low_color="rgb(189, 189, 242)"
             high_color="rgb(0, 0, 255)"
-            scala="Crime Rate"/>
+            scala="Crime Rate[0,1]"/>
     <db-map title="Review"
             text_color="black"
             :zips="this.review"
             :population="this.population"
             low_color="rgb(255, 255, 255)"
             high_color="rgb(254, 3, 3)"
-            scala="AVG Stars"/>
+            scala="AVG Stars[0,1]"/>
     <db-map title="Pill"
             text_color="black"
             :zips="this.pill"
             :population="this.population"
             low_color="rgb(255, 255, 194)"
             high_color="rgb(39, 104, 15)"
-            scala="Buy Amount"/>
+            scala="Buy Amount[0,1]"/>
   </div>
 </template>
 

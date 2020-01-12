@@ -9,7 +9,7 @@ at university Basel.
 
 Our findings and information about the whole process can be found in our report here:
 
-- [Report](report-group-4.pdf)
+- [Report](report/proceedings.pdf)
 
 ## Needed Software
 
@@ -43,18 +43,18 @@ python -m pip install mysql-connector
 ### Integration
 The data can be integrated by running the ```.py```-files in following order:
 
-####Pain Pill usage in the US
+#### Pain Pill usage in the US
 * serializer.py
 * splitter.py
 * filter.py
 * inserter.py
 * report_inserter.py
 
-####Phoenix Crime
+#### Phoenix Crime
 * crime_serializer_filter.py
 * crime_address.py
 
-####Yelp
+#### Yelp
 * yelp_filter.py
 * yelp_address.py
 * yelp_business.py
